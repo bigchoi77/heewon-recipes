@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>마카로니치즈 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; margin-bottom: 8px; }
+  h1 { margin: 0 0 4px; font-size: 1.8em; letter-spacing: 1px; }
+  .subtitle { color: #888; font-size: 0.9em; font-style: italic; margin-bottom: 16px; }
+
+  .servings-box {
+    position: sticky; top: 8px; z-index: 10;
+    background: white;
+    border: 2px solid #2E4057;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin: 16px 0 24px;
+    box-shadow: 0 4px 12px rgba(46,64,87,0.12);
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; flex-wrap: wrap;
+  }
+  .servings-box .lbl { color: #555; font-size: 0.95em; font-weight: bold; }
+  .btn {
+    font-size: 1.5em; line-height: 1;
+    background: #2E4057; color: white;
+    border: 0; border-radius: 50%;
+    width: 40px; height: 40px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn:active { transform: scale(0.95); }
+  #servings {
+    font-size: 1.6em; font-weight: bold;
+    width: 70px; text-align: center;
+    border: 1px solid #ccc; border-radius: 8px;
+    padding: 4px 6px;
+  }
+  .unit { font-size: 1.1em; color: #2E4057; }
+
+  h2 {
+    border-bottom: 1.5px solid #2E4057;
+    padding-bottom: 4px; margin-top: 32px;
+    font-size: 1.3em; color: #2E4057;
+  }
+
+  table { width: 100%; border-collapse: collapse; background: white; margin: 12px 0; font-size: 0.95em; }
+  th, td { padding: 8px 10px; border: 1px solid #dde2e8; text-align: left; }
+  th { background: #E8EDF1; color: #2E4057; }
+  .amt-base { color: #999; }
+  .amt-scaled { font-weight: bold; color: #C95D28; font-size: 1.05em; }
+  .note { background: #FFF8DC; border-left: 4px solid #DAA520; padding: 10px 14px; margin: 10px 0; font-size: 0.88em; color: #6B5B00; }
+  .warn { background: #FFE8E8; border-left: 4px solid #C33; padding: 10px 14px; margin: 10px 0; font-size: 0.95em; }
+  .warn ul { margin: 4px 0 4px 16px; padding-left: 8px; }
+  .ratio-box { text-align: center; background: #F0F4F7; border-radius: 10px; padding: 14px; font-size: 1.1em; font-weight: bold; margin: 8px 0; color: #2E4057; }
+  ol.steps { padding-left: 22px; }
+  ol.steps li { margin-bottom: 12px; padding-left: 4px; }
+  .scaled { font-weight: bold; color: #C95D28; padding: 0 2px; }
+  footer { text-align: center; color: #aaa; font-size: 0.8em; margin: 40px 0 10px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;"><a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a></div>
+<header>
+  <h1>♥ 마카로니치즈 ♥</h1>
+  <div class="subtitle">Bekind Labs 합숙 · 화요일 아침 · 할랄</div>
+</header>
+
+<div class="servings-box">
+  <button class="btn" onclick="adjust(-1)" aria-label="감소">−</button>
+  <input type="number" id="servings" value="8" min="1" max="40" oninput="update()">
+  <span class="unit">인분</span>
+  <button class="btn" onclick="adjust(1)" aria-label="증가">+</button>
+</div>
+
+<h2>재료</h2>
+<table>
+  <thead>
+    <tr>
+      <th style="width:32%">재료</th>
+      <th style="width:28%">1인분</th>
+      <th style="width:40%"><span id="nServ2">8</span>인분</th>
+    </tr>
+  </thead>
+  <tbody id="ingredientBody"></tbody>
+</table>
+
+<div class="note">
+  ※ 1인분 기준은 손글씨 원본(2인분 ÷ 2)을 사용. 손글씨에 형광펜으로 적힌 <b>보정값</b>(75%)도 병기되어 있으나,
+  먼저 원본대로 만들어본 뒤 소스가 묽으면 다음 번에 보정값으로 줄이세요.
+</div>
+
+<h2>비율 원칙</h2>
+<div class="ratio-box">베샤멜 소스 = 버터 : 박력분 : 우유 = 1 : 1 : 20</div>
+
+<h2>⚠ 할랄 체크포인트</h2>
+<div class="warn">
+  <ul>
+    <li><b>치즈 렌넷(rennet)</b> — 구다·모짜렐라·파마산 모두 동물성 렌넷이 들어간 제품이 많음</li>
+    <li>포장 라벨에 "Microbial rennet" 또는 "Vegetarian rennet" 표시된 제품 선택</li>
+    <li>국내 할랄 인증 수입치즈 또는 비건/베지테리언 치즈 권장</li>
+  </ul>
+</div>
+
+<h2>만드는 법 <span style="font-size:0.7em; color:#888; font-weight:normal;">(스토브탑 / 오븐 없이)</span></h2>
+<ol class="steps">
+  <li>큰 냄비에 물을 끓이고 소금을 넉넉히 넣는다. 파스타 <span class="scaled" id="s-pasta"></span>을 표기 시간대로 삶는다 <span style="color:#888">(알 덴테 11분 / 일반 13분)</span>. 건져 찬물에 살짝 헹군 뒤 올리브오일 약간 둘러 둔다.</li>
+  <li>두꺼운 소스팬에 버터 <span class="scaled" id="s-butter"></span>을 약불로 녹인다.</li>
+  <li>박력분 <span class="scaled" id="s-flour"></span>을 넣고 거품기로 저으며 1~2분 볶는다 <span style="color:#888">(밀가루 비린내가 사라질 때까지, 색이 나지 않게)</span>.</li>
+  <li>우유 <span class="scaled" id="s-milk"></span>를 조금씩 부으며 계속 저어 베샤멜을 완성 <span style="color:#888">(중불 5~8분, 걸쭉해질 때까지)</span>.</li>
+  <li>소금·후추로 간한다. 기호에 따라 넛맥이나 마늘가루 약간.</li>
+  <li><b>불을 약하게 줄이고</b> 구다치즈 <span class="scaled" id="s-gouda"></span>과 모짜렐라를 모두 넣어 살살 저어 부드럽게 녹인다 <span style="color:#888">(치즈가 분리되지 않도록 너무 센 불은 금지)</span>.</li>
+  <li>삶은 파스타를 소스에 넣고 골고루 버무린다. 소스가 너무 되면 우유 1~2큰술 추가해 농도 조절.</li>
+  <li>그릇에 담고 <b>파마산</b>을 살짝 뿌려 마무리. <b>차지키</b>와 <b>당근·오이·셀러리 스틱</b>을 곁들여 서빙.</li>
+</ol>
+
+<h2>팁 & 서빙</h2>
+<ul>
+  <li>스토브탑 버전이라 <b>만들자마자 바로 서빙</b>이 가장 맛있음 — 시간이 지나면 소스가 굳음</li>
+  <li>다시 데울 때는 팬에 우유 2~3큰술 추가해 약불로 저어가며 풀어주기 <span style="color:#888">(오븐 X)</span></li>
+  <li>아이가 있으면 파마산 줄이고 구다 비중을 높여 순한 맛으로</li>
+  <li>넉넉히 남을 예상이면 미리 <b>반씩 나눠</b> 조리 — 두 번째 배치는 먹기 직전에 마무리</li>
+</ul>
+
+<footer>
+  손글씨 레시피 전자화 · 2026-04-19<br>
+  Heewon @ Bekind Labs
+</footer>
+
+<script>
+  // 1인분 기준 (원본 2인분 ÷ 2)
+  const BASE = [
+    { key: 'butter', name: '버터',           amt: 10,  unit: 'g' },
+    { key: 'flour',  name: '박력분',          amt: 10,  unit: 'g' },
+    { key: 'milk',   name: '우유',            amt: 200, unit: 'ml' },
+    { key: 'gouda',  name: '구다치즈',         amt: 40,  unit: 'g' },
+    { key: 'mozza',  name: '모짜렐라',         amt: 10,  unit: 'g' },
+    { key: 'parm',   name: '파마산',           amt: null, unit: '',  display: '조금 (5~10g)' },
+    { key: 'pasta',  name: '파스타 (마카로니)', amt: 80,  unit: 'g' },
+  ];
+
+  // pretty-format scaled amount
+  function fmt(amt, unit) {
+    if (amt == null) return null;
+    // ml → L for large quantities
+    if (unit === 'ml' && amt >= 1000) {
+      const L = amt / 1000;
+      return (Math.round(L * 100) / 100).toString().replace(/\.?0+$/, '') + 'L';
+    }
+    // g → kg for very large quantities
+    if (unit === 'g' && amt >= 1000) {
+      const kg = amt / 1000;
+      return (Math.round(kg * 100) / 100).toString().replace(/\.?0+$/, '') + 'kg';
+    }
+    // round to integer for >= 100
+    if (amt >= 100) return Math.round(amt) + unit;
+    // else one decimal
+    return (Math.round(amt * 10) / 10).toString().replace(/\.0$/, '') + unit;
+  }
+
+  function adjust(delta) {
+    const el = document.getElementById('servings');
+    el.value = Math.max(1, Math.min(40, (parseInt(el.value) || 1) + delta));
+    update();
+  }
+
+  function update() {
+    const n = parseInt(document.getElementById('servings').value) || 1;
+    document.getElementById('nServ2').textContent = n;
+
+    // Render ingredient rows
+    const tbody = document.getElementById('ingredientBody');
+    tbody.innerHTML = '';
+    for (const it of BASE) {
+      const tr = document.createElement('tr');
+      const baseCell = it.amt == null ? (it.display || '-') : (it.amt + it.unit);
+      const scaledCell = it.amt == null ? (it.display || '-') : fmt(it.amt * n, it.unit);
+      tr.innerHTML =
+        '<td><b>' + it.name + '</b></td>' +
+        '<td class="amt-base">' + baseCell + '</td>' +
+        '<td class="amt-scaled">' + scaledCell + '</td>';
+      tbody.appendChild(tr);
+    }
+
+    // Update inline amounts in cooking steps
+    const get = (k) => BASE.find(b => b.key === k);
+    const setStep = (id, k) => {
+      const b = get(k);
+      document.getElementById(id).textContent = fmt(b.amt * n, b.unit);
+    };
+    setStep('s-pasta',  'pasta');
+    setStep('s-butter', 'butter');
+    setStep('s-flour',  'flour');
+    setStep('s-milk',   'milk');
+    setStep('s-gouda',  'gouda');
+  }
+
+  update();
+</script>
+</body>
+</html>

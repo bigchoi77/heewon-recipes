@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>차지키 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; margin-bottom: 8px; }
+  h1 { margin: 0 0 4px; font-size: 1.8em; letter-spacing: 1px; }
+  .subtitle { color: #888; font-size: 0.9em; font-style: italic; margin-bottom: 16px; }
+
+  .servings-box {
+    position: sticky; top: 8px; z-index: 10;
+    background: white;
+    border: 2px solid #2E4057;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin: 16px 0 24px;
+    box-shadow: 0 4px 12px rgba(46,64,87,0.12);
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; flex-wrap: wrap;
+  }
+  .btn {
+    font-size: 1.5em; line-height: 1;
+    background: #2E4057; color: white;
+    border: 0; border-radius: 50%;
+    width: 40px; height: 40px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn:active { transform: scale(0.95); }
+  #servings {
+    font-size: 1.6em; font-weight: bold;
+    width: 70px; text-align: center;
+    border: 1px solid #ccc; border-radius: 8px;
+    padding: 4px 6px;
+  }
+  .unit { font-size: 1.1em; color: #2E4057; }
+
+  h2 {
+    border-bottom: 1.5px solid #2E4057;
+    padding-bottom: 4px; margin-top: 32px;
+    font-size: 1.3em; color: #2E4057;
+  }
+
+  table { width: 100%; border-collapse: collapse; background: white; margin: 12px 0; font-size: 0.95em; }
+  th, td { padding: 8px 10px; border: 1px solid #dde2e8; text-align: left; }
+  th { background: #E8EDF1; color: #2E4057; }
+  .amt-base { color: #999; }
+  .amt-scaled { font-weight: bold; color: #C95D28; font-size: 1.05em; }
+  .note { background: #FFF8DC; border-left: 4px solid #DAA520; padding: 10px 14px; margin: 10px 0; font-size: 0.88em; color: #6B5B00; }
+  .warn { background: #FFE8E8; border-left: 4px solid #C33; padding: 10px 14px; margin: 10px 0; font-size: 0.95em; }
+  ol.steps { padding-left: 22px; }
+  ol.steps li { margin-bottom: 12px; padding-left: 4px; }
+  .scaled { font-weight: bold; color: #C95D28; padding: 0 2px; }
+  footer { text-align: center; color: #aaa; font-size: 0.8em; margin: 40px 0 10px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;"><a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a></div>
+
+<header>
+  <h1>❀ 차지키 ❀</h1>
+  <div class="subtitle">Bekind Labs 합숙 · 화요일 아침 · 할랄 · 그릭 요거트 딥</div>
+</header>
+
+<div class="servings-box">
+  <button class="btn" onclick="adjust(-1)" aria-label="감소">−</button>
+  <input type="number" id="servings" value="8" min="1" max="40" oninput="update()">
+  <span class="unit">인분</span>
+  <button class="btn" onclick="adjust(1)" aria-label="증가">+</button>
+</div>
+
+<h2>재료</h2>
+<table>
+  <thead>
+    <tr>
+      <th style="width:32%">재료</th>
+      <th style="width:28%">1인분</th>
+      <th style="width:40%"><span id="nServ2">8</span>인분</th>
+    </tr>
+  </thead>
+  <tbody id="ingredientBody"></tbody>
+</table>
+
+<div class="note">
+  ※ 1인분 기준은 손글씨 원본(2인분 ÷ 2). 차지키는 딥/사이드로 내기에 사람 수보다 양을 조금 여유있게 잡아도 좋음.
+</div>
+
+<h2>⚠ 할랄 체크포인트</h2>
+<div class="warn">
+  <ul>
+    <li><b>그릭 요거트</b> — 대부분 할랄 이슈 없으나 "Gelatin" 첨가물 포함 제품 피하기</li>
+    <li>젤라틴 프리 / 무첨가 / 동물성 응고제 없는 요거트 선택</li>
+  </ul>
+</div>
+
+<h2>만드는 법</h2>
+<ol class="steps">
+  <li>오이 <span class="scaled" id="s-cuke"></span>를 필러로 얇게 썬다 <span style="color:#888">(리본처럼 얇게)</span>.</li>
+  <li>얇게 썬 오이에 소금 <span class="scaled" id="s-salt"></span>을 뿌려 10~15분 절인다.</li>
+  <li>절인 오이의 물기를 두 손으로 꽉 짜낸 뒤 잘게 썬다 <span style="color:#888">(수분이 많으면 소스가 묽어짐)</span>.</li>
+  <li>볼에 그릭요거트 <span class="scaled" id="s-yogurt"></span>, 다진 마늘 <span class="scaled" id="s-garlic"></span>, 썰어둔 오이, 레몬즙 <span class="scaled" id="s-lemon"></span>을 넣고 잘 섞는다.</li>
+  <li>생딜 <span class="scaled" id="s-dillmix"></span>을 잘게 다져 넣고 후추로 마무리 간을 한다 <span style="color:#888">(전체 딜의 절반)</span>.</li>
+  <li>그릇에 담고 남은 딜 <span class="scaled" id="s-dilltop"></span>을 올린 뒤 올리브유 <span class="scaled" id="s-oil"></span>를 둘러 마무리.</li>
+</ol>
+
+<h2>팁 & 서빙</h2>
+<ul>
+  <li>차갑게 냉장 30분~1시간 숙성하면 맛이 더 어우러짐</li>
+  <li><b>당근·오이·셀러리 스틱</b>, 피타빵, 또는 마카로니치즈의 느끼함을 잡는 소스로</li>
+  <li>마늘 양은 기호껏 — 강하게 하려면 1인분 기준 1/2쪽까지</li>
+  <li>만들어두고 먹기 직전 올리브유만 다시 두르면 산뜻함 유지</li>
+</ul>
+
+<footer>
+  손글씨 레시피 전자화 · 2026-04-19<br>
+  Heewon @ Bekind Labs
+</footer>
+
+<script>
+  // 1인분 기준 (원본 2인분 ÷ 2)
+  const BASE = [
+    { key: 'yogurt',   name: '그릭요거트', amt: 100,  unit: 'g' },
+    { key: 'cucumber', name: '오이',      amt: 0.5,  unit: '개' },
+    { key: 'garlic',   name: '마늘',      amt: 0.25, unit: '쪽' },
+    { key: 'salt',     name: '소금',      amt: 0.5,  unit: 'ts' },
+    { key: 'oliveoil', name: '올리브유',   amt: 0.5,  unit: 'Ts' },
+    { key: 'lemon',    name: '레몬즙',     amt: 0.25, unit: 'Ts' },
+    { key: 'pepper',   name: '후추',      amt: null, display: '약간' },
+    { key: 'dill',     name: '딜 (생, 잘게 썬)', amt: 2, unit: 'g' },
+  ];
+
+  // Strip trailing zeros ONLY after a decimal point (e.g. "2.50"→"2.5", "1.0"→"1").
+  // Never strips zeros from integers (e.g. "100" stays "100").
+  function trimZeros(s) {
+    if (s.indexOf('.') === -1) return s;
+    return s.replace(/0+$/, '').replace(/\.$/, '');
+  }
+
+  function fmt(amt, unit) {
+    if (amt == null) return null;
+    // Unit conversions for large quantities
+    if (unit === 'ml' && amt >= 1000) {
+      return trimZeros((Math.round(amt / 10) / 100).toString()) + 'L';
+    }
+    if (unit === 'g' && amt >= 1000) {
+      return trimZeros((Math.round(amt / 10) / 100).toString()) + 'kg';
+    }
+    // Precision by magnitude
+    let num;
+    if (amt >= 100) num = Math.round(amt);
+    else if (amt >= 10) num = Math.round(amt * 10) / 10;
+    else if (amt >= 1)  num = Math.round(amt * 10) / 10;
+    else                num = Math.round(amt * 100) / 100;
+    return trimZeros(num.toString()) + unit;
+  }
+
+  function adjust(delta) {
+    const el = document.getElementById('servings');
+    el.value = Math.max(1, Math.min(40, (parseInt(el.value) || 1) + delta));
+    update();
+  }
+
+  function update() {
+    const n = parseInt(document.getElementById('servings').value) || 1;
+    document.getElementById('nServ2').textContent = n;
+
+    const tbody = document.getElementById('ingredientBody');
+    tbody.innerHTML = '';
+    for (const it of BASE) {
+      const tr = document.createElement('tr');
+      const baseCell = it.amt == null ? (it.display || '-') : fmt(it.amt, it.unit);
+      const scaledCell = it.amt == null ? (it.display || '-') : fmt(it.amt * n, it.unit);
+      tr.innerHTML =
+        '<td><b>' + it.name + '</b></td>' +
+        '<td class="amt-base">' + baseCell + '</td>' +
+        '<td class="amt-scaled">' + scaledCell + '</td>';
+      tbody.appendChild(tr);
+    }
+
+    const get = (k) => BASE.find(b => b.key === k);
+    const setStep = (id, k) => {
+      const b = get(k);
+      document.getElementById(id).textContent = fmt(b.amt * n, b.unit);
+    };
+    setStep('s-cuke',   'cucumber');
+    setStep('s-salt',   'salt');
+    setStep('s-yogurt', 'yogurt');
+    setStep('s-garlic', 'garlic');
+    setStep('s-lemon',  'lemon');
+    setStep('s-oil',    'oliveoil');
+
+    // Dill is split 50/50 between step 5 (mix) and step 6 (top)
+    const dill = get('dill');
+    document.getElementById('s-dillmix').textContent = fmt(dill.amt * n / 2, dill.unit);
+    document.getElementById('s-dilltop').textContent = fmt(dill.amt * n / 2, dill.unit);
+  }
+
+  update();
+</script>
+</body>
+</html>

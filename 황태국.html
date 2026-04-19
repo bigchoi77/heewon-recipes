@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>황태국 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ── 상단 헤더 ── */
+  header { text-align: center; padding: 20px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 2em; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.9em; }
+  .tags { margin: 10px 0 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    background: #E8EDF1; color: #4A6280;
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 0.82em; font-weight: 600;
+  }
+  .tag.halal { background: #D4F1DE; color: #22633B; }
+
+  /* ── 인원수 컨트롤 (sticky) ── */
+  .serving-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #2E4057;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin: 20px 0;
+    box-shadow: 0 3px 12px rgba(46,64,87,0.25);
+  }
+  .serving-bar label { font-size: 0.95em; font-weight: 600; white-space: nowrap; }
+  .serving-controls { display: flex; align-items: center; gap: 10px; }
+  .btn-round {
+    width: 34px; height: 34px;
+    border-radius: 50%; border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-size: 1.2em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-round:hover { background: rgba(255,255,255,0.3); }
+  #servingCount {
+    font-size: 1.5em; font-weight: bold;
+    min-width: 36px; text-align: center;
+  }
+  .serving-note { font-size: 0.8em; opacity: 0.75; }
+
+  /* ── 섹션 ── */
+  section { background: white; border-radius: 14px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(46,64,87,0.07); }
+  section h2 { margin: 0 0 14px; font-size: 1.05em; color: #2E4057; border-bottom: 2px solid #E8EDF1; padding-bottom: 8px; }
+
+  /* ── 재료표 ── */
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; }
+  thead th {
+    background: #E8EDF1; padding: 8px 10px;
+    text-align: left; font-weight: 600; color: #4A6280;
+  }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+  td:not(:first-child) { text-align: center; }
+  td.scaled { font-weight: 700; color: #22633B; }
+  tr.group-header td {
+    background: #f0f4f8; font-weight: bold;
+    color: #4A6280; font-size: 0.85em;
+    padding: 6px 10px; border-bottom: none;
+  }
+  .unit { font-size: 0.82em; color: #888; }
+
+  /* ── 조리 순서 ── */
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px dashed #e2e8f0;
+    align-items: start;
+  }
+  .steps li:last-child { border-bottom: 0; }
+  .step-num {
+    width: 28px; height: 28px;
+    background: #2E4057; color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85em; font-weight: bold; flex-shrink: 0;
+  }
+  .step-text { font-size: 0.93em; padding-top: 3px; }
+  .step-text .amt {
+    background: #D4F1DE; color: #22633B;
+    font-weight: 700; border-radius: 4px;
+    padding: 1px 5px; font-size: 0.92em;
+  }
+  .step-text em { color: #C95D28; font-style: normal; font-weight: 600; }
+  .tip {
+    background: #FFF8F0; border-left: 3px solid #F6AD55;
+    border-radius: 0 8px 8px 0;
+    padding: 8px 12px; margin-top: 8px;
+    font-size: 0.87em; color: #7B5A2B;
+  }
+
+  /* ── 팁 카드 ── */
+  .note-card {
+    background: #F0F7FF; border-radius: 10px;
+    padding: 12px 16px; font-size: 0.88em; color: #4A6280;
+    margin-top: 6px;
+  }
+  .note-card strong { color: #2E4057; }
+
+  footer { text-align: center; color: #aaa; font-size: 0.78em; margin-top: 30px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;"><a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a></div>
+
+<header>
+  <h1>🐟 황태국</h1>
+  <div class="subtitle">구수하고 시원한 국물 · 해장에도 최고</div>
+  <div class="tags">
+    <span class="tag halal">✓ 할랄</span>
+    <span class="tag">한식</span>
+    <span class="tag">국·탕</span>
+    <span class="tag">⏱ 30분</span>
+  </div>
+</header>
+
+<!-- 인원수 컨트롤 -->
+<div class="serving-bar">
+  <label>인원수</label>
+  <div class="serving-controls">
+    <button class="btn-round" onclick="changeServing(-1)">−</button>
+    <span id="servingCount">8</span>
+    <button class="btn-round" onclick="changeServing(1)">+</button>
+  </div>
+  <span class="serving-note">명 기준</span>
+</div>
+
+<!-- 재료 -->
+<section>
+  <h2>🛒 재료</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>재료</th>
+        <th>1인분</th>
+        <th id="scaledHeader">현재 (<span id="hN">8</span>인분)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="group-header"><td colspan="3">주재료</td></tr>
+      <tr>
+        <td>황태채 (최고급)</td>
+        <td>12 <span class="unit">g</span></td>
+        <td class="scaled"><span data-base="12" data-unit="g"></span></td>
+      </tr>
+      <tr>
+        <td>무 (초록 부분)</td>
+        <td>40 <span class="unit">g</span></td>
+        <td class="scaled"><span data-base="40" data-unit="g"></span></td>
+      </tr>
+      <tr>
+        <td>콩나물</td>
+        <td>40 <span class="unit">g</span></td>
+        <td class="scaled"><span data-base="40" data-unit="g"></span></td>
+      </tr>
+      <tr>
+        <td>계란</td>
+        <td>½ <span class="unit">개</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="개" data-round="half"></span></td>
+      </tr>
+      <tr class="group-header"><td colspan="3">양념</td></tr>
+      <tr>
+        <td>들기름</td>
+        <td>½ <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="작은술" data-round="half"></span></td>
+      </tr>
+      <tr>
+        <td>갈은 마늘</td>
+        <td>½ <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="작은술" data-round="half"></span></td>
+      </tr>
+      <tr>
+        <td>참치액</td>
+        <td>½ <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="큰술" data-round="half"></span></td>
+      </tr>
+      <tr>
+        <td>소금</td>
+        <td colspan="2" style="text-align:center; color:#888;">마지막 간 조절용</td>
+      </tr>
+      <tr class="group-header"><td colspan="3">국물</td></tr>
+      <tr>
+        <td>물 (황태 불린 물 포함)</td>
+        <td>300 <span class="unit">ml</span></td>
+        <td class="scaled"><span data-base="300" data-unit="ml"></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note-card" style="margin-top:12px;">
+    <strong>💡 계란</strong> — 2인분에 1개가 자연스러워요. 1인 1개씩 넣어도 됩니다. 취향껏!
+  </div>
+</section>
+
+<!-- 조리 순서 -->
+<section>
+  <h2>👩‍🍳 조리 순서</h2>
+  <ol class="steps">
+
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-text">
+        황태채 <span class="amt" data-base="12" data-unit="g"></span>을 찬물에 살짝 담가 불린다.
+        물기를 짜지 말고, <em>황태 불린 물은 따로 보관</em>.
+        <div class="tip">가시를 꼼꼼히 제거하고, 가위로 먹기 좋은 크기(5~7cm)로 자른다.</div>
+      </div>
+    </li>
+
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-text">
+        무 <span class="amt" data-base="40" data-unit="g"></span>는 <em>초록 부분 위주로</em> 사각납작썰기(0.5cm 두께 납작한 사각형).
+      </div>
+    </li>
+
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-text">
+        냄비에 들기름 <span class="amt" data-base="0.5" data-unit="작은술" data-round="half"></span>을 두르고, 갈은 마늘 <span class="amt" data-base="0.5" data-unit="작은술" data-round="half"></span>을 중불에서 향이 올라올 때까지 볶는다 (30초~1분).
+      </div>
+    </li>
+
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-text">
+        황태채를 넣고 <em>1~2분 더 볶는다</em>. 황태가 들기름을 머금어 고소한 향이 나면 OK.
+      </div>
+    </li>
+
+    <li>
+      <div class="step-num">5</div>
+      <div class="step-text">
+        무를 넣고 함께 1분 정도 볶는다.
+      </div>
+    </li>
+
+    <li>
+      <div class="step-num">6</div>
+      <div class="step-text">
+        황태 불린 물을 <em>반 컵씩 나눠서</em> 여러 차례 부어가며 총 <span class="amt" data-base="300" data-unit="ml"></span>가 되도록 맞춘다.
+        센불로 끓어오르면 중불로 줄이고 10~15분 끓인다.
+        <div class="tip">한꺼번에 붓지 않고 나눠 넣으면 국물이 더 진하고 뽀얗게 우러남.</div>
+      </div>
+    </li>
+
+    <li>
+      <div class="step-num">7</div>
+      <div class="step-text">
+        참치액 <span class="amt" data-base="0.5" data-unit="큰술" data-round="half"></span>으로 1차 간을 한다.
+      </div>
+    </li>
+
+    <li>
+      <div class="step-num">8</div>
+      <div class="step-text">
+        <em>무가 반투명해지면</em> 콩나물 <span class="amt" data-base="40" data-unit="g"></span>을 넣고 <em>뚜껑을 닫아</em> 2~3분 익힌다.
+        <div class="tip">콩나물 넣고 뚜껑 열지 않아야 비린내가 안 남.</div>
+      </div>
+    </li>
+
+    <li>
+      <div class="step-num">9</div>
+      <div class="step-text">
+        계란 <span class="amt" data-base="0.5" data-unit="개" data-round="half"></span>을 풀어 휘저어가며 넣는다. 마지막으로 간을 보고 소금으로 조절.
+      </div>
+    </li>
+
+  </ol>
+</section>
+
+<!-- 포인트 노트 -->
+<section>
+  <h2>📝 포인트</h2>
+  <div class="note-card">
+    <strong>황태 불린 물</strong> — 멸치육수 없이 이 물만으로도 충분히 깊은 국물이 나옴. 버리면 아까운 감칠맛!
+  </div>
+  <div class="note-card" style="margin-top:8px;">
+    <strong>무 초록 부분</strong> — 단맛보다 시원하고 깔끔한 맛이 국물과 잘 어울림.
+  </div>
+  <div class="note-card" style="margin-top:8px;">
+    <strong>할랄 확인</strong> — 참치액 제품에 돼지 추출물 함유 여부 확인 (일반 제품은 대부분 OK, 라벨 체크 권장).
+  </div>
+</section>
+
+<footer>
+  Heewon @ Bekind Labs · 합숙 2026-04-20~04-26<br>
+  참고: <a href="https://www.kurly.com/recipe/6762958697b057e6630609ee" style="color:#aaa;" target="_blank">마켓컬리</a> · <a href="https://wtable.co.kr/recipes/VHWZjwytDBNQzL8LdkPnMZkg" style="color:#aaa;" target="_blank">우리의식탁</a>
+</footer>
+
+<script>
+  let N = 8;
+
+  function fmt(val, unit, roundType) {
+    let v = val * N;
+    if (roundType === 'half') {
+      // round to nearest 0.5
+      v = Math.round(v * 2) / 2;
+      if (v === Math.floor(v)) return v + ' ' + unit;
+      return v + ' ' + unit;
+    }
+    // round to nearest 5 for large numbers, else 1
+    if (v >= 100) v = Math.round(v / 5) * 5;
+    else if (v >= 20) v = Math.round(v);
+    else v = Math.round(v * 2) / 2;
+    if (v === Math.floor(v)) return v + ' ' + unit;
+    return v + ' ' + unit;
+  }
+
+  function update() {
+    document.getElementById('servingCount').textContent = N;
+    document.getElementById('hN').textContent = N;
+
+    document.querySelectorAll('[data-base]').forEach(el => {
+      const base = parseFloat(el.dataset.base);
+      const unit = el.dataset.unit;
+      const round = el.dataset.round || null;
+      el.textContent = fmt(base, unit, round);
+    });
+  }
+
+  function changeServing(d) {
+    N = Math.max(1, N + d);
+    update();
+  }
+
+  update();
+</script>
+</body>
+</html>

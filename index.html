@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>합숙 식단표 · Bekind Labs</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 16px;
+    color: #2E4057;
+    line-height: 1.55;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; padding: 16px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 1.7em; letter-spacing: 1px; }
+  .subtitle { color: #888; font-size: 0.9em; font-style: italic; }
+
+  .legend {
+    display: flex; justify-content: center; gap: 16px;
+    margin: 14px 0 20px; font-size: 0.85em; color: #666;
+  }
+  .legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+  .dot.ready { background: #37A169; }
+  .dot.pending { background: #CBD5E0; }
+  .dot.skip { background: #F6AD55; }
+
+  .day-card {
+    background: white;
+    border-radius: 14px;
+    margin: 14px 0;
+    padding: 14px 18px;
+    box-shadow: 0 2px 6px rgba(46,64,87,0.08);
+    border-left: 4px solid #2E4057;
+  }
+  .day-card.noservice {
+    background: #F7FAFC;
+    border-left-color: #CBD5E0;
+    color: #888;
+    font-style: italic;
+  }
+  .day-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .day-title { font-size: 1.2em; font-weight: bold; color: #2E4057; }
+  .day-note { font-size: 0.85em; color: #C95D28; font-weight: bold; }
+
+  .meal-row {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 10px;
+    padding: 10px 0;
+    border-top: 1px dashed #e2e8f0;
+    align-items: start;
+  }
+  .meal-row:first-of-type { border-top: 0; }
+  .meal-label {
+    font-weight: bold;
+    color: #2E4057;
+    background: #E8EDF1;
+    border-radius: 6px;
+    padding: 4px 8px;
+    text-align: center;
+    font-size: 0.9em;
+    width: fit-content;
+  }
+  .meal-row.external .meal-body { color: #888; font-style: italic; }
+  .meal-row.simple .meal-body { color: #666; }
+
+  .dish {
+    display: inline-block;
+    padding: 6px 10px;
+    margin: 3px 4px 3px 0;
+    border-radius: 20px;
+    font-size: 0.92em;
+    text-decoration: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .dish.ready {
+    background: #D4F1DE;
+    color: #22633B;
+    font-weight: 600;
+    border: 1px solid #37A169;
+  }
+  .dish.ready:hover { background: #37A169; color: white; transform: translateY(-1px); box-shadow: 0 2px 6px rgba(55,161,105,0.3); }
+  .dish.pending {
+    background: #F1F5F9;
+    color: #64748B;
+    border: 1px dashed #CBD5E0;
+    cursor: default;
+  }
+  .plus { color: #999; margin: 0 2px; }
+  .aside { color: #888; font-size: 0.85em; font-style: italic; margin-left: 6px; }
+
+  .summary {
+    margin-top: 30px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    font-size: 0.9em;
+  }
+  .summary h2 { margin-top: 0; font-size: 1.1em; color: #2E4057; }
+  .progress-bar {
+    height: 10px; background: #E8EDF1; border-radius: 5px; overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #37A169 0%, #48BB78 100%);
+    transition: width 0.3s;
+  }
+  footer { text-align: center; color: #aaa; font-size: 0.8em; margin: 30px 0 10px; font-style: italic; }
+
+  @media (max-width: 540px) {
+    .meal-row { grid-template-columns: 60px 1fr; }
+    .day-header { flex-direction: column; gap: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🗓 합숙 식단표</h1>
+  <div class="subtitle">Bekind Labs · 2026-04-20 ~ 04-26 · 할랄 · 6~10인</div>
+</header>
+
+<div class="legend">
+  <span><span class="dot ready"></span>레시피 준비됨 (클릭)</span>
+  <span><span class="dot pending"></span>준비중</span>
+  <span><span class="dot skip"></span>외부</span>
+</div>
+
+<!-- 월 4/20 -->
+<div class="day-card noservice">
+  <div class="day-header"><span class="day-title">월 4/20</span><span class="day-note">도착 / 요리 없음</span></div>
+</div>
+
+<!-- 화 4/21 -->
+<div class="day-card">
+  <div class="day-header"><span class="day-title">화 4/21</span><span class="day-note">정육 도착 전 · 고기 없음</span></div>
+  <div class="meal-row">
+    <div class="meal-label">아침</div>
+    <div class="meal-body">
+      <a class="dish ready" href="./마카로니치즈.html">마카로니치즈</a>
+      <a class="dish ready" href="./차지키.html">차지키</a>
+      <span class="aside">+ 당근·오이·셀러리 스틱</span>
+    </div>
+  </div>
+  <div class="meal-row">
+    <div class="meal-label">저녁</div>
+    <div class="meal-body">
+      <a class="dish ready" href="./황태국.html">황태국</a>
+      <span class="dish pending">황태고추장구이</span>
+      <span class="dish pending">해물전</span>
+      <span class="dish pending">미나리전</span>
+      <span class="dish pending">눈개승마볶음</span>
+      <span class="aside">+ 밥 + 김치</span>
+    </div>
+  </div>
+</div>
+
+<!-- 수 4/22 -->
+<div class="day-card">
+  <div class="day-header"><span class="day-title">수 4/22</span><span class="day-note">🥩 정육 도착일</span></div>
+  <div class="meal-row simple">
+    <div class="meal-label">아침</div>
+    <div class="meal-body">🍞 토스트 + 🍎 과일</div>
+  </div>
+  <div class="meal-row">
+    <div class="meal-label">점심</div>
+    <div class="meal-body">
+      <span class="dish pending">관자미역국</span>
+      <span class="dish pending">나물비빔밥</span>
+      <span class="aside">+ 고사리 · 시금치 · 무나물 · 콩나물</span>
+    </div>
+  </div>
+  <div class="meal-row">
+    <div class="meal-label">저녁</div>
+    <div class="meal-body">
+      <span class="dish pending">갈비찜</span>
+      <span class="dish pending">차돌된장찌개</span>
+      <span class="aside">+ 밥</span>
+      <em style="color:#C95D28; font-size:0.85em;">— 하이라이트 · 신선 정육</em>
+    </div>
+  </div>
+</div>
+
+<!-- 목 4/23 -->
+<div class="day-card">
+  <div class="day-header"><span class="day-title">목 4/23</span></div>
+  <div class="meal-row simple">
+    <div class="meal-label">아침</div>
+    <div class="meal-body">🍞 토스트 + 🍎 과일</div>
+  </div>
+  <div class="meal-row">
+    <div class="meal-label">점심</div>
+    <div class="meal-body">
+      <span class="dish pending">볼로네제 파스타</span>
+      <span class="aside">+ 샐러드</span>
+    </div>
+  </div>
+  <div class="meal-row external">
+    <div class="meal-label">저녁</div>
+    <div class="meal-body">🛵 배달 (요리 없음)</div>
+  </div>
+</div>
+
+<!-- 금 4/24 -->
+<div class="day-card">
+  <div class="day-header"><span class="day-title">금 4/24</span></div>
+  <div class="meal-row">
+    <div class="meal-label">아침</div>
+    <div class="meal-body">
+      <span class="dish pending">잣죽</span>
+      <span class="aside">+ 🍎 과일</span>
+    </div>
+  </div>
+  <div class="meal-row external">
+    <div class="meal-label">점심</div>
+    <div class="meal-body">🛵 배달 (요리 없음)</div>
+  </div>
+  <div class="meal-row">
+    <div class="meal-label">저녁</div>
+    <div class="meal-body">
+      <span class="dish pending">불고기낙지전골</span>
+      <span class="dish pending">잡채</span>
+      <span class="dish pending">미나리전</span>
+      <em style="color:#C95D28; font-size:0.85em;">— 한식 잔치</em>
+    </div>
+  </div>
+</div>
+
+<!-- 토 4/25 -->
+<div class="day-card">
+  <div class="day-header"><span class="day-title">토 4/25</span></div>
+  <div class="meal-row simple">
+    <div class="meal-label">아침</div>
+    <div class="meal-body">🍞 토스트 + 🍎 과일</div>
+  </div>
+  <div class="meal-row">
+    <div class="meal-label">점심</div>
+    <div class="meal-body">
+      <span class="dish pending">궁중떡볶이</span>
+      <span class="aside">+ 남은 반찬 · <em style="color:#C95D28">TBD</em></span>
+    </div>
+  </div>
+  <div class="meal-row external">
+    <div class="meal-label">저녁</div>
+    <div class="meal-body">🍽 외식 (요리 없음)</div>
+  </div>
+</div>
+
+<!-- 일 4/26 -->
+<div class="day-card noservice">
+  <div class="day-header"><span class="day-title">일 4/26</span><span class="day-note">종료 / 요리 없음</span></div>
+</div>
+
+<div class="summary">
+  <h2>📋 레시피 전자화 진행률</h2>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <div id="progressText" style="text-align:center; font-weight:bold;"></div>
+  <div style="margin-top:10px; color:#666; font-size:0.88em;" id="pendingList"></div>
+</div>
+
+<footer>
+  요리명 클릭 시 해당 레시피로 이동 · 준비중 항목은 손글씨 사진 업로드 시 활성화<br>
+  Heewon @ Bekind Labs · 2026-04-19 생성
+</footer>
+
+<script>
+  // Count recipe progress
+  const allDishes = document.querySelectorAll('.dish');
+  const ready = document.querySelectorAll('.dish.ready');
+  const pending = document.querySelectorAll('.dish.pending');
+  const uniqPending = [...new Set([...pending].map(d => d.textContent.trim()))];
+
+  const pct = allDishes.length ? Math.round((ready.length / allDishes.length) * 100) : 0;
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('progressText').textContent = ready.length + ' / ' + allDishes.length + ' 요리 완료 (' + pct + '%)';
+  document.getElementById('pendingList').textContent = '준비중: ' + uniqPending.join(', ');
+</script>
+</body>
+</html>
