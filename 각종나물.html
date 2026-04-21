@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>각종 나물 양념장 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; padding: 20px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 2em; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.9em; }
+
+  /* ── 탭 ── */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    margin: 20px 0 0;
+    border-radius: 14px 14px 0 0;
+    overflow: hidden;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 14px 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 700;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1.3;
+  }
+  .tab-btn.soy {
+    background: #E8EDF1;
+    color: #4A6280;
+  }
+  .tab-btn.soy.active {
+    background: #2E4057;
+    color: white;
+  }
+  .tab-btn.cho {
+    background: #FDDEDE;
+    color: #C0392B;
+  }
+  .tab-btn.cho.active {
+    background: #C0392B;
+    color: white;
+  }
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+
+  /* ── 공통 ── */
+  .serving-bar {
+    position: sticky; top: 0; z-index: 100;
+    padding: 12px 20px; border-radius: 0;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin: 0 0 4px;
+    color: white;
+  }
+  .serving-bar.soy { background: #2E4057; box-shadow: 0 3px 12px rgba(46,64,87,0.25); }
+  .serving-bar.cho  { background: #C0392B; box-shadow: 0 3px 12px rgba(192,57,43,0.3); }
+  .serving-bar label { font-size: 0.95em; font-weight: 600; white-space: nowrap; }
+  .serving-controls { display: flex; align-items: center; gap: 10px; }
+  .btn-round {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-size: 1.2em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-round:hover { background: rgba(255,255,255,0.3); }
+  .count { font-size: 1.5em; font-weight: bold; min-width: 36px; text-align: center; }
+
+  section { background: white; border-radius: 14px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(46,64,87,0.07); }
+  section h2 { margin: 0 0 14px; font-size: 1.05em; color: #2E4057; border-bottom: 2px solid #E8EDF1; padding-bottom: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; }
+  thead th { background: #E8EDF1; padding: 8px 10px; text-align: left; font-weight: 600; color: #4A6280; }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+  td:not(:first-child) { text-align: center; }
+  .unit { font-size: 0.82em; color: #888; }
+
+  td.scaled-soy { font-weight: 700; color: #2E4057; }
+  td.scaled-cho { font-weight: 700; color: #C0392B; }
+
+  .ratio-bar {
+    display: flex; align-items: stretch;
+    border-radius: 10px; overflow: hidden;
+    margin: 14px 0; height: 44px; font-size: 0.82em;
+  }
+  .ratio-item {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 6px; color: white; font-weight: 700;
+    line-height: 1.2;
+  }
+  .ratio-item span { font-size: 0.82em; opacity: 0.85; }
+
+  .note-card-soy { background: #F0F7FF; border-radius: 10px; padding: 12px 16px; font-size: 0.88em; color: #4A6280; margin-top: 10px; }
+  .note-card-soy strong { color: #2E4057; }
+  .note-card-cho { background: #FFF5F5; border-radius: 10px; padding: 12px 16px; font-size: 0.88em; color: #7B3030; margin-top: 10px; }
+  .note-card-cho strong { color: #C0392B; }
+
+  .tip {
+    background: #FFF8F0; border-left: 3px solid #F6AD55;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px; margin-top: 10px;
+    font-size: 0.88em; color: #7B5A2B;
+  }
+  .sub-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin-top: 8px; }
+  .sub-table td { padding: 6px 8px; border-bottom: 1px solid #f0f0f0; }
+  .sub-table td:first-child { color: #4A6280; }
+  .sub-table td:last-child { font-weight: 600; color: #2E4057; }
+
+  .veg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .veg-chip-soy { background: #E8EDF1; color: #2E4057; border: 1px solid #BCC8D8; border-radius: 20px; padding: 3px 10px; font-size: 0.85em; font-weight: 600; }
+  .veg-chip-cho { background: #FFF0F0; color: #C0392B; border: 1px solid #F5A8A8; border-radius: 20px; padding: 3px 10px; font-size: 0.85em; font-weight: 600; }
+
+  ol.steps { list-style: none; margin: 0; padding: 0; }
+  ol.steps li { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; align-items: start; }
+  ol.steps li:last-child { border-bottom: 0; }
+  .step-num-soy { width: 28px; height: 28px; background: #2E4057; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: bold; flex-shrink: 0; }
+  .step-num-cho { width: 28px; height: 28px; background: #C0392B; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: bold; flex-shrink: 0; }
+  .step-text { font-size: 0.93em; padding-top: 3px; }
+  .step-text em { color: #C95D28; font-style: normal; font-weight: 600; }
+
+  footer { text-align: center; color: #aaa; font-size: 0.78em; margin-top: 30px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<header>
+  <h1>🌿 각종 나물 양념장</h1>
+  <div class="subtitle">나물 종류에 맞는 양념장을 선택하세요</div>
+</header>
+
+<!-- 탭 버튼 -->
+<div class="tab-bar">
+  <button class="tab-btn soy active" onclick="switchTab('soy')">
+    🥬 나물무침 양념장<br><span style="font-size:0.82em; font-weight:400;">간장·들기름 베이스</span>
+  </button>
+  <button class="tab-btn cho" onclick="switchTab('cho')">
+    🌶 초고추장 양념장<br><span style="font-size:0.82em; font-weight:400;">새콤달콤 매콤</span>
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════
+     탭 1: 나물무침 양념장
+══════════════════════════════════════ -->
+<div class="tab-content active" id="tab-soy">
+
+  <!-- sticky 배수 바 -->
+  <div class="serving-bar soy">
+    <label>배수</label>
+    <div class="serving-controls">
+      <button class="btn-round" onclick="changeN('soy',-1)">−</button>
+      <span class="count" id="soyCount">×1</span>
+      <button class="btn-round" onclick="changeN('soy',1)">+</button>
+    </div>
+  </div>
+
+  <!-- 비율 바 -->
+  <section>
+    <h2>⚖️ 황금 비율</h2>
+    <div class="ratio-bar">
+      <div class="ratio-item" style="flex:1; background:#3B7DD8;">국간장<span>1</span></div>
+      <div class="ratio-item" style="flex:0.5; background:#5A9CF0;">마늘<span>½</span></div>
+      <div class="ratio-item" style="flex:1; background:#2E7D52;">쌈장<span>1</span></div>
+      <div class="ratio-item" style="flex:1; background:#7B6B3D;">들기름<span>1</span></div>
+      <div class="ratio-item" style="flex:1; background:#C5A028;">통깨<span>1</span></div>
+      <div class="ratio-item" style="flex:1; background:#C06030;">미림<span>1</span></div>
+    </div>
+    <div class="note-card-soy">기준 단위는 <strong>큰술(T)</strong>. 배수 조절로 필요한 양을 바로 확인하세요.</div>
+  </section>
+
+  <!-- 재료표 -->
+  <section>
+    <h2>🛒 재료</h2>
+    <table>
+      <thead>
+        <tr><th>재료</th><th>기준 (×1)</th><th>현재 (<span id="soyHN">×1</span>)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>국간장 (조선간장)</td><td>1 <span class="unit">큰술</span></td><td class="scaled-soy"><span data-soy="1" data-unit="큰술"></span></td></tr>
+        <tr><td>다진마늘</td><td>½ <span class="unit">큰술</span></td><td class="scaled-soy"><span data-soy="0.5" data-unit="큰술" data-round="half"></span></td></tr>
+        <tr><td>쌈장</td><td>1 <span class="unit">큰술</span></td><td class="scaled-soy"><span data-soy="1" data-unit="큰술"></span></td></tr>
+        <tr><td>들기름</td><td>1 <span class="unit">큰술</span></td><td class="scaled-soy"><span data-soy="1" data-unit="큰술"></span></td></tr>
+        <tr><td>통깨</td><td>1 <span class="unit">큰술</span></td><td class="scaled-soy"><span data-soy="1" data-unit="큰술"></span></td></tr>
+        <tr><td>미림</td><td>1 <span class="unit">큰술</span></td><td class="scaled-soy"><span data-soy="1" data-unit="큰술"></span></td></tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      <strong>미림이 없을 때</strong><br>
+      <table class="sub-table">
+        <tr><td>매실청</td><td>동량(1:1) → 가장 자연스러운 대체</td></tr>
+        <tr><td>설탕</td><td>절반량(1→½) → 단맛만 보충</td></tr>
+        <tr><td>생략</td><td>간장을 조금 줄이고 들기름을 살짝 늘리면 균형 유지</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 어울리는 나물 -->
+  <section>
+    <h2>🌿 어울리는 나물</h2>
+    <div class="veg-chips">
+      <span class="veg-chip-soy">고사리</span>
+      <span class="veg-chip-soy">시금치</span>
+      <span class="veg-chip-soy">콩나물</span>
+      <span class="veg-chip-soy">취나물</span>
+      <span class="veg-chip-soy">도라지</span>
+      <span class="veg-chip-soy">고구마줄기</span>
+    </div>
+    <div class="note-card-soy" style="margin-top:12px;">
+      <strong>💡 데치거나 볶은 나물</strong>에 잘 어울려요. 수분이 많은 나물(시금치·콩나물)은 양념을 조금 줄이고, 건조한 나물(고사리·취나물)은 들기름을 조금 더 넣으면 촉촉해요.
+    </div>
+  </section>
+
+  <!-- 사용법 -->
+  <section>
+    <h2>👩‍🍳 사용법</h2>
+    <ol style="margin:0; padding-left:20px; font-size:0.93em; line-height:2;">
+      <li>데친/볶은 나물의 물기를 꼭 짠다.</li>
+      <li>양념장 재료를 모두 섞는다.</li>
+      <li>나물에 양념장을 넣고 조물조물 무친다.</li>
+      <li>간을 보고 부족하면 국간장으로 조절.</li>
+    </ol>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════
+     탭 2: 초고추장 양념장
+══════════════════════════════════════ -->
+<div class="tab-content" id="tab-cho">
+
+  <!-- sticky 배수 바 -->
+  <div class="serving-bar cho">
+    <label>배수</label>
+    <div class="serving-controls">
+      <button class="btn-round" onclick="changeN('cho',-1)">−</button>
+      <span class="count" id="choCount">×1</span>
+      <button class="btn-round" onclick="changeN('cho',1)">+</button>
+    </div>
+  </div>
+
+  <!-- 비율 바 -->
+  <section>
+    <h2>⚖️ 황금 비율</h2>
+    <div class="ratio-bar">
+      <div class="ratio-item" style="flex:1; background:#C0392B;">고추장<span>1</span></div>
+      <div class="ratio-item" style="flex:1; background:#E67E22;">식초<span>1</span></div>
+      <div class="ratio-item" style="flex:0.5; background:#3B7DD8;">간장<span>½</span></div>
+      <div class="ratio-item" style="flex:1; background:#27AE60;">매실청<span>1</span></div>
+      <div class="ratio-item" style="flex:0.5; background:#8E44AD;">마늘<span>½</span></div>
+      <div class="ratio-item" style="flex:1; background:#7B6B3D;">참기름<span>1</span></div>
+      <div class="ratio-item" style="flex:1; background:#C5A028;">통깨<span>1</span></div>
+    </div>
+    <div class="note-card-cho">기준 단위는 <strong>큰술</strong>. 배수 조절로 필요한 양을 바로 확인하세요.</div>
+  </section>
+
+  <!-- 재료표 -->
+  <section>
+    <h2>🛒 재료</h2>
+    <table>
+      <thead>
+        <tr><th>재료</th><th>기준 (×1)</th><th>현재 (<span id="choHN">×1</span>)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>고추장</td><td>1 <span class="unit">큰술</span></td><td class="scaled-cho"><span data-cho="1" data-unit="큰술"></span></td></tr>
+        <tr><td>식초</td><td>1 <span class="unit">큰술</span></td><td class="scaled-cho"><span data-cho="1" data-unit="큰술"></span></td></tr>
+        <tr><td>간장</td><td>½ <span class="unit">큰술</span></td><td class="scaled-cho"><span data-cho="0.5" data-unit="큰술" data-round="half"></span></td></tr>
+        <tr><td>매실청</td><td>1 <span class="unit">큰술</span></td><td class="scaled-cho"><span data-cho="1" data-unit="큰술"></span></td></tr>
+        <tr><td>다진마늘</td><td>½ <span class="unit">큰술</span></td><td class="scaled-cho"><span data-cho="0.5" data-unit="큰술" data-round="half"></span></td></tr>
+        <tr><td>참기름</td><td>1 <span class="unit">큰술</span></td><td class="scaled-cho"><span data-cho="1" data-unit="큰술"></span></td></tr>
+        <tr><td>통깨</td><td>1 <span class="unit">큰술</span></td><td class="scaled-cho"><span data-cho="1" data-unit="큰술"></span></td></tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      <strong>새콤함 조절</strong> — 식초를 ½큰술로 줄이면 덜 새콤하고 고추장 맛이 도드라져요. 달래처럼 향이 강한 나물엔 식초 풀로, 미나리처럼 부드러운 나물엔 조금 줄여도 좋아요.
+    </div>
+  </section>
+
+  <!-- 어울리는 나물 -->
+  <section>
+    <h2>🌿 어울리는 나물</h2>
+    <div class="veg-chips">
+      <span class="veg-chip-cho">달래</span>
+      <span class="veg-chip-cho">미나리</span>
+      <span class="veg-chip-cho">파채</span>
+      <span class="veg-chip-cho">오이</span>
+      <span class="veg-chip-cho">참나물</span>
+      <span class="veg-chip-cho">냉이</span>
+      <span class="veg-chip-cho">두릅</span>
+    </div>
+    <div class="note-card-cho" style="margin-top:12px;">
+      <strong>생으로 먹거나 향이 강한 봄나물</strong>에 잘 어울려요. 살살 버무려야 여린 나물이 물러지지 않아요 (10~15번 정도).
+    </div>
+  </section>
+
+  <!-- 사용법 -->
+  <section>
+    <h2>👩‍🍳 사용법</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-num-cho">1</div>
+        <div class="step-text">재료를 모두 한 볼에 넣고 잘 섞어 양념장 완성.</div>
+      </li>
+      <li>
+        <div class="step-num-cho">2</div>
+        <div class="step-text">손질한 나물의 물기를 제거한 후 양념장을 넣고 <em>살살</em> 버무린다.
+          <br><span style="font-size:0.88em; color:#888;">달래·미나리처럼 여린 나물은 세게 무치면 물러지므로 가볍게 10~15번만.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-num-cho">3</div>
+        <div class="step-text">간을 보고 새콤함이 부족하면 식초, 단맛이 부족하면 매실청으로 조절.</div>
+      </li>
+    </ol>
+  </section>
+</div>
+
+<div style="margin-top:20px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<footer>Heewon @ Bekind Labs · 합숙 2026-04-20~04-26</footer>
+
+<script>
+  let soyN = 1, choN = 1;
+
+  function fmt(val, N, roundType) {
+    let v = val * N;
+    if (roundType === 'half') {
+      v = Math.round(v * 2) / 2;
+    } else {
+      if (v >= 10) v = Math.round(v);
+      else v = Math.round(v * 2) / 2;
+    }
+    if (v === Math.floor(v)) return v + ' ' + '큰술';
+    return v + ' ' + '큰술';
+  }
+
+  function updateSoy() {
+    document.getElementById('soyCount').textContent = '×' + soyN;
+    document.getElementById('soyHN').textContent = '×' + soyN;
+    document.querySelectorAll('[data-soy]').forEach(el => {
+      el.textContent = fmt(parseFloat(el.dataset.soy), soyN, el.dataset.round || null);
+    });
+  }
+
+  function updateCho() {
+    document.getElementById('choCount').textContent = '×' + choN;
+    document.getElementById('choHN').textContent = '×' + choN;
+    document.querySelectorAll('[data-cho]').forEach(el => {
+      el.textContent = fmt(parseFloat(el.dataset.cho), choN, el.dataset.round || null);
+    });
+  }
+
+  function changeN(tab, d) {
+    if (tab === 'soy') { soyN = Math.max(1, soyN + d); updateSoy(); }
+    else               { choN = Math.max(1, choN + d); updateCho(); }
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelector('.tab-btn.' + tab).classList.add('active');
+  }
+
+  updateSoy();
+  updateCho();
+</script>
+</body>
+</html>
