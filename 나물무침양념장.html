@@ -111,15 +111,14 @@
   </div>
 </header>
 
-<!-- 인원수 컨트롤 -->
+<!-- 배수 컨트롤 -->
 <div class="serving-bar">
-  <label>인원수</label>
+  <label>배수</label>
   <div class="serving-controls">
     <button class="btn-round" onclick="changeServing(-1)">−</button>
-    <span id="servingCount">8</span>
+    <span id="servingCount">×1</span>
     <button class="btn-round" onclick="changeServing(1)">+</button>
   </div>
-  <span class="serving-note">명 기준</span>
 </div>
 
 <!-- 비율 바 -->
@@ -134,7 +133,7 @@
     <div class="ratio-item" style="flex:1; background:#C06030;">미림<span>1</span></div>
   </div>
   <div class="note-card">
-    기준 단위는 <strong>큰술(T)</strong>. 인원수에 따라 아래 표의 양을 참고하세요.
+    기준 단위는 <strong>큰술(T)</strong>. 배수 조절로 필요한 양을 바로 확인하세요.
   </div>
 </section>
 
@@ -145,40 +144,40 @@
     <thead>
       <tr>
         <th>재료</th>
-        <th>1인분</th>
-        <th>현재 (<span id="hN">8</span>인분)</th>
+        <th>기준 (×1)</th>
+        <th>현재 (<span id="hN">×1</span>)</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>국간장 (조선간장)</td>
-        <td>1 <span class="unit">작은술</span></td>
-        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술"></span></td>
       </tr>
       <tr>
         <td>다진마늘</td>
-        <td>½ <span class="unit">작은술</span></td>
-        <td class="scaled"><span data-base="0.5" data-unit="작은술" data-round="half"></span></td>
+        <td>½ <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="큰술" data-round="half"></span></td>
       </tr>
       <tr>
         <td>쌈장</td>
-        <td>1 <span class="unit">작은술</span></td>
-        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술"></span></td>
       </tr>
       <tr>
         <td>들기름</td>
-        <td>1 <span class="unit">작은술</span></td>
-        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술"></span></td>
       </tr>
       <tr>
         <td>통깨</td>
-        <td>1 <span class="unit">작은술</span></td>
-        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술"></span></td>
       </tr>
       <tr>
         <td>미림</td>
-        <td>1 <span class="unit">작은술</span></td>
-        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술"></span></td>
       </tr>
     </tbody>
   </table>
@@ -217,7 +216,7 @@
 <footer>Heewon @ Bekind Labs · 합숙 2026-04-20~04-26</footer>
 
 <script>
-  let N = 8;
+  let N = 1;
 
   function fmt(val, unit, roundType) {
     let v = val * N;
@@ -233,8 +232,8 @@
   }
 
   function update() {
-    document.getElementById('servingCount').textContent = N;
-    document.getElementById('hN').textContent = N;
+    document.getElementById('servingCount').textContent = '×' + N;
+    document.getElementById('hN').textContent = '×' + N;
     document.querySelectorAll('[data-base]').forEach(el => {
       el.textContent = fmt(parseFloat(el.dataset.base), el.dataset.unit, el.dataset.round || null);
     });
