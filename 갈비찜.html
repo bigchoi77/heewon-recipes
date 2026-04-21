@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>갈비찜 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; padding: 20px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 2em; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.9em; }
+  .tags { margin: 10px 0 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tag { background: #E8EDF1; color: #4A6280; border-radius: 20px; padding: 4px 12px; font-size: 0.82em; font-weight: 600; }
+  .tag.halal { background: #D4F1DE; color: #22633B; }
+
+  /* ── 중량 컨트롤 ── */
+  .weight-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #6B2D0E; color: white;
+    padding: 12px 20px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin: 20px 0;
+    box-shadow: 0 3px 12px rgba(107,45,14,0.35);
+  }
+  .weight-bar label { font-size: 0.95em; font-weight: 600; white-space: nowrap; }
+  .weight-controls { display: flex; align-items: center; gap: 10px; }
+  .btn-round {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-size: 1.2em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-round:hover { background: rgba(255,255,255,0.3); }
+  #weightDisplay { font-size: 1.5em; font-weight: bold; min-width: 64px; text-align: center; }
+  .weight-note { font-size: 0.8em; opacity: 0.75; }
+
+  section { background: white; border-radius: 14px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(46,64,87,0.07); }
+  section h2 { margin: 0 0 14px; font-size: 1.05em; color: #2E4057; border-bottom: 2px solid #E8EDF1; padding-bottom: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; }
+  thead th { background: #E8EDF1; padding: 8px 10px; text-align: left; font-weight: 600; color: #4A6280; }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+  td:not(:first-child) { text-align: center; }
+  td.scaled { font-weight: 700; color: #6B2D0E; font-size: 1.05em; }
+  td.base { color: #999; font-size: 0.88em; }
+  .unit { font-size: 0.82em; color: #888; }
+  tr.group-header td {
+    background: #f5ede8; font-weight: bold;
+    color: #6B2D0E; font-size: 0.85em;
+    padding: 6px 10px; border-bottom: none;
+  }
+
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li {
+    display: grid; grid-template-columns: 36px 1fr;
+    gap: 10px; padding: 14px 0;
+    border-bottom: 1px dashed #e2e8f0; align-items: start;
+  }
+  .steps li:last-child { border-bottom: 0; }
+  .step-num {
+    width: 28px; height: 28px;
+    background: #6B2D0E; color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85em; font-weight: bold; flex-shrink: 0;
+  }
+  .step-text { font-size: 0.93em; padding-top: 3px; }
+  .step-text .amt {
+    background: #F5E6DE; color: #6B2D0E;
+    font-weight: 700; border-radius: 4px;
+    padding: 1px 6px; font-size: 0.95em;
+  }
+  .step-text em { color: #C95D28; font-style: normal; font-weight: 600; }
+  .tip {
+    background: #FFF8F0; border-left: 3px solid #F6AD55;
+    border-radius: 0 8px 8px 0;
+    padding: 8px 12px; margin-top: 8px;
+    font-size: 0.87em; color: #7B5A2B;
+  }
+  .note-card {
+    background: #FBF0EC; border-radius: 10px;
+    padding: 12px 16px; font-size: 0.88em; color: #5C2D0E;
+    margin-top: 10px;
+  }
+  .note-card strong { color: #6B2D0E; }
+  .veg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .veg-chip {
+    background: #F5E6DE; color: #6B2D0E;
+    border: 1px solid #D4A088; border-radius: 20px;
+    padding: 3px 10px; font-size: 0.85em; font-weight: 600;
+  }
+
+  footer { text-align: center; color: #aaa; font-size: 0.78em; margin-top: 30px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<header>
+  <h1>🥩 갈비찜</h1>
+  <div class="subtitle">소갈비 기준 · 밤·감자·당근·대추 채소조림</div>
+  <div class="tags">
+    <span class="tag halal">✓ 할랄</span>
+    <span class="tag">한식</span>
+    <span class="tag">메인</span>
+    <span class="tag">⏱ 2시간+</span>
+  </div>
+</header>
+
+<!-- 갈비 중량 컨트롤 -->
+<div class="weight-bar">
+  <label>소갈비</label>
+  <div class="weight-controls">
+    <button class="btn-round" onclick="changeWeight(-500)">−</button>
+    <span id="weightDisplay">2.5kg</span>
+    <button class="btn-round" onclick="changeWeight(+500)">+</button>
+  </div>
+  <span class="weight-note">500g 단위</span>
+</div>
+
+<!-- 재료 -->
+<section>
+  <h2>🛒 재료</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>재료</th>
+        <th>2.5kg 기준</th>
+        <th>현재 (<span id="hW">2.5</span>kg)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="group-header"><td colspan="3">육수 재료</td></tr>
+      <tr>
+        <td>물</td>
+        <td class="base">3 <span class="unit">ℓ</span></td>
+        <td class="scaled"><span data-base="3" data-unit="ℓ" data-type="L"></span></td>
+      </tr>
+      <tr>
+        <td>진간장</td>
+        <td class="base">1 <span class="unit">컵 (200ml)</span></td>
+        <td class="scaled"><span data-base="1" data-unit="컵" data-type="cup"></span></td>
+      </tr>
+      <tr>
+        <td>황설탕</td>
+        <td class="base">8 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="8" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>대파</td>
+        <td class="base">1 <span class="unit">대</span></td>
+        <td class="scaled"><span data-base="1" data-unit="대" data-type="whole"></span></td>
+      </tr>
+      <tr>
+        <td>통마늘</td>
+        <td class="base">5 <span class="unit">알</span></td>
+        <td class="scaled"><span data-base="5" data-unit="알" data-type="whole"></span></td>
+      </tr>
+      <tr>
+        <td>생강</td>
+        <td class="base">20 <span class="unit">g</span></td>
+        <td class="scaled"><span data-base="20" data-unit="g" data-type="g"></span></td>
+      </tr>
+      <tr>
+        <td>사과</td>
+        <td class="base">½ <span class="unit">개</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="개" data-type="half"></span></td>
+      </tr>
+      <tr>
+        <td>배</td>
+        <td class="base">½ <span class="unit">개</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="개" data-type="half"></span></td>
+      </tr>
+      <tr>
+        <td>키위</td>
+        <td class="base">1 <span class="unit">개</span></td>
+        <td class="scaled"><span data-base="1" data-unit="개" data-type="whole"></span></td>
+      </tr>
+      <tr class="group-header"><td colspan="3">마무리 재료</td></tr>
+      <tr>
+        <td>물엿</td>
+        <td class="base">10 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="10" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>참기름</td>
+        <td colspan="2" style="text-align:center; color:#888;">적당량 (한 바퀴)</td>
+      </tr>
+      <tr class="group-header"><td colspan="3">채소 (마무리 조림용)</td></tr>
+      <tr>
+        <td>밤 · 감자 · 당근 · 대추</td>
+        <td colspan="2" style="text-align:center; color:#888;">기호에 따라 적당량</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note-card" style="margin-top:12px;">
+    💡 <strong>고기 비율 참고</strong> — 소갈비 2.5kg 기준 순살(뼈 제외) 약 1kg. 뼈 비중이 크니 인원수 계산 시 참고하세요.
+  </div>
+</section>
+
+<!-- 조리 순서 -->
+<section>
+  <h2>👩‍🍳 조리 순서</h2>
+  <ol class="steps">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <em>육수 만들기</em> — 물 <span class="amt" data-step="3" data-stepunit="ℓ" data-steptype="L"></span>에 진간장 <span class="amt" data-step="1" data-stepunit="컵" data-steptype="cup"></span>, 황설탕 <span class="amt" data-step="8" data-stepunit="큰술" data-steptype="sp"></span>, 대파·통마늘·생강·사과·배·키위를 넣고 <em>팔팔 끓으면 30분 끓인 후 식힌다</em>.
+        <div class="tip">과일(사과·배·키위)은 고기를 부드럽게 해주는 천연 연육제. 육수를 식혀야 기름기를 걷어낼 수 있어요.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <em>갈비 굽기</em> — 스텐레스팬을 강불로 달군 뒤 갈비를 <em>스테이크 굽듯이</em> 겉면을 강하게 시어링(searing)한다.
+        <div class="tip">마이야르 반응으로 풍미가 깊어져요. 기름 없이, 팬이 충분히 달궈진 후 굽는 게 포인트.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-text">
+        갈비 구운 팬에 <em>간장 육수를 붓고</em> 끓이기 시작한다. (팬 바닥의 갈색 찌꺼기가 녹아 육수에 합쳐짐)
+      </div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-text">
+        물엿 <span class="amt" data-step="10" data-stepunit="큰술" data-steptype="sp"></span>과 참기름을 넣고 <em>한 시간 이상</em> 약불~중불로 끓인다.
+        <div class="tip">중간중간 뚜껑을 열어 국물이 졸아드는지 확인. 갈비가 포크로 쉽게 찢길 정도가 되면 OK.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">5</div>
+      <div class="step-text">
+        갈비를 덜어낸 뒤 같은 냄비에 <em>말린 표고버섯(불린 것)·무·밤·당근·대추</em> 등 채소를 담고 <em>센불 10~15분</em> 조린다.
+        <div class="tip">말린 표고 불린 물도 국물에 합치면 감칠맛 UP. 채소를 먼저 넣으면 흐물거릴 수 있으니 갈비가 다 익은 후 마지막에 넣어요. 국물이 채소에 배어들며 윤기가 나면 완성.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">6</div>
+      <div class="step-text">
+        갈비를 다시 담고 국물을 끼얹어 낸다.
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- 어울리는 채소 -->
+<section>
+  <h2>🥕 채소 추천</h2>
+  <div class="veg-chips">
+    <span class="veg-chip" style="background:#F5E6DE; border-color:#B5651D; color:#6B2D0E;">⭐ 말린 표고버섯 (불린 것)</span>
+    <span class="veg-chip">밤</span>
+    <span class="veg-chip">무</span>
+    <span class="veg-chip">당근</span>
+    <span class="veg-chip">대추</span>
+    <span class="veg-chip">연근</span>
+  </div>
+  <div class="note-card" style="margin-top:12px;">
+    <strong>⭐ 말린 표고버섯</strong> — 생표고보다 말린 것을 물에 불려 쓰면 감칠맛이 훨씬 깊어요. 불린 물도 버리지 말고 육수에 합치면 굿.<br>
+    <span style="margin-top:6px; display:block;"><strong>무 vs 감자</strong> — 소갈비찜엔 감자보다 무가 잘 어울려요. 국물을 잘 흡수하면서도 흐물거리지 않고 식감이 살아있어요.</span>
+  </div>
+</section>
+
+<div style="margin-top:20px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<footer>Heewon @ Bekind Labs · 합숙 2026-04-20~04-26</footer>
+
+<script>
+  let W = 2500; // g
+  const BASE = 2500;
+
+  function scale(base) { return base * (W / BASE); }
+
+  function fmtSp(base) {
+    const v = scale(base);
+    const r = Math.round(v * 2) / 2;
+    if (r === Math.floor(r)) return r + ' 큰술';
+    return r + ' 큰술';
+  }
+
+  function fmtL(base) {
+    const v = scale(base);
+    const r = Math.round(v * 4) / 4;
+    if (r === Math.floor(r)) return r + ' ℓ';
+    return r + ' ℓ';
+  }
+
+  function fmtCup(base) {
+    const v = scale(base);
+    const r = Math.round(v * 2) / 2;
+    if (r === Math.floor(r)) return r + ' 컵';
+    return r + ' 컵';
+  }
+
+  function fmtG(base) {
+    const v = scale(base);
+    const r = Math.round(v / 10) * 10;
+    return r + ' g';
+  }
+
+  function fmtWhole(base) {
+    const v = scale(base);
+    return Math.ceil(v) + ' ' + '';  // unit from data
+  }
+
+  function fmtHalf(base) {
+    const v = scale(base);
+    const r = Math.round(v * 2) / 2;
+    if (r === Math.floor(r)) return r + ' 개';
+    return r + ' 개';
+  }
+
+  function fmtAny(el) {
+    const base = parseFloat(el.dataset.base);
+    const unit = el.dataset.unit;
+    const type = el.dataset.type;
+    const v = scale(base);
+    if (type === 'sp') {
+      const r = Math.round(v * 2) / 2;
+      return (r === Math.floor(r) ? r : r) + ' ' + unit;
+    } else if (type === 'L') {
+      const r = Math.round(v * 4) / 4;
+      return r + ' ' + unit;
+    } else if (type === 'cup') {
+      const r = Math.round(v * 2) / 2;
+      return r + ' ' + unit;
+    } else if (type === 'g') {
+      const r = Math.round(v / 10) * 10;
+      return r + ' ' + unit;
+    } else if (type === 'whole') {
+      return Math.ceil(v) + ' ' + unit;
+    } else if (type === 'half') {
+      const r = Math.round(v * 2) / 2;
+      return r + ' ' + unit;
+    }
+    return v + ' ' + unit;
+  }
+
+  function fmtStep(el) {
+    const base = parseFloat(el.dataset.step);
+    const unit = el.dataset.stepunit;
+    const type = el.dataset.steptype;
+    const v = scale(base);
+    if (type === 'sp') {
+      const r = Math.round(v * 2) / 2;
+      return r + ' ' + unit;
+    } else if (type === 'L') {
+      const r = Math.round(v * 4) / 4;
+      return r + ' ' + unit;
+    } else if (type === 'cup') {
+      const r = Math.round(v * 2) / 2;
+      return r + ' ' + unit;
+    }
+    return v + ' ' + unit;
+  }
+
+  function update() {
+    const kg = W / 1000;
+    document.getElementById('weightDisplay').textContent = kg + 'kg';
+    document.getElementById('hW').textContent = kg;
+
+    document.querySelectorAll('[data-base]').forEach(el => {
+      el.textContent = fmtAny(el);
+    });
+    document.querySelectorAll('[data-step]').forEach(el => {
+      el.textContent = fmtStep(el);
+    });
+  }
+
+  function changeWeight(delta) {
+    W = Math.max(500, W + delta);
+    update();
+  }
+
+  update();
+</script>
+</body>
+</html>
