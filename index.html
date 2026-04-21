@@ -16,9 +16,21 @@
     background: #fafafa;
     -webkit-text-size-adjust: 100%;
   }
-  header { text-align: center; padding: 16px 0 8px; }
+  header { text-align: center; padding: 16px 0 8px; position: relative; }
   h1 { margin: 0 0 4px; font-size: 1.7em; letter-spacing: 1px; }
   .subtitle { color: #888; font-size: 0.9em; font-style: italic; }
+
+  #langBtn {
+    position: absolute;
+    top: 16px; right: 0;
+    background: #E8EDF1; border: none;
+    color: #4A6280; font-size: 0.82em;
+    font-weight: 700; border-radius: 20px;
+    padding: 6px 14px; cursor: pointer;
+    font-family: inherit; letter-spacing: 0.5px;
+    transition: background 0.15s, color 0.15s;
+  }
+  #langBtn:hover { background: #2E4057; color: white; }
 
   .legend {
     display: flex; justify-content: center; gap: 16px;
@@ -31,16 +43,15 @@
 
   .day-card {
     background: white;
-    border-radius: 14px;
-    margin: 14px 0;
-    padding: 14px 18px;
-    box-shadow: 0 2px 6px rgba(46,64,87,0.08);
-    border-left: 4px solid #2E4057;
+    border-radius: 6px;
+    margin: 12px 0;
+    padding: 16px 20px;
+    border: 1px solid #DDE3EA;
   }
   .day-card.noservice {
     background: #F7FAFC;
-    border-left-color: #CBD5E0;
-    color: #888;
+    border-color: #E8EDF1;
+    color: #AAB4C0;
     font-style: italic;
   }
   .day-header {
@@ -52,22 +63,22 @@
 
   .meal-row {
     display: grid;
-    grid-template-columns: 70px 1fr;
-    gap: 10px;
+    grid-template-columns: max-content 1fr;
+    gap: 12px;
     padding: 10px 0;
-    border-top: 1px dashed #e2e8f0;
-    align-items: start;
+    border-top: 1px solid #F0F4F8;
+    align-items: center;
   }
   .meal-row:first-of-type { border-top: 0; }
   .meal-label {
-    font-weight: bold;
-    color: #2E4057;
-    background: #E8EDF1;
-    border-radius: 6px;
-    padding: 4px 8px;
+    font-weight: 600;
+    color: #4A6280;
+    background: #F0F4F8;
+    border-radius: 4px;
+    padding: 4px 10px;
     text-align: center;
-    font-size: 0.9em;
-    width: fit-content;
+    font-size: 0.85em;
+    white-space: nowrap;
   }
   .meal-row.external .meal-body { color: #888; font-style: italic; }
   .meal-row.simple .meal-body { color: #666; }
@@ -99,9 +110,10 @@
 
   .summary {
     margin-top: 30px;
-    padding: 16px;
+    padding: 16px 20px;
     background: white;
-    border-radius: 12px;
+    border-radius: 6px;
+    border: 1px solid #DDE3EA;
     font-size: 0.9em;
   }
   .summary h2 { margin-top: 0; font-size: 1.1em; color: #2E4057; }
@@ -116,171 +128,221 @@
   footer { text-align: center; color: #aaa; font-size: 0.8em; margin: 30px 0 10px; font-style: italic; }
 
   @media (max-width: 540px) {
-    .meal-row { grid-template-columns: 60px 1fr; }
     .day-header { flex-direction: column; gap: 2px; }
+    #langBtn { font-size: 0.75em; padding: 5px 10px; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>2026 트래커부트 리트리트 식단</h1>
-  <div class="subtitle">Bekind Labs · 2026-04-20 ~ 04-26 · 할랄 · 6~10인</div>
+  <button id="langBtn" onclick="toggleLang()">🌐 EN</button>
+  <h1 data-ko="2026 트래커부트 리트리트 식단" data-en="2026 TrackerBoot Retreat Menu">2026 트래커부트 리트리트 식단</h1>
+  <div class="subtitle" data-ko="Bekind Labs · 2026-04-20 ~ 04-26 · 할랄 · 6~10인" data-en="Bekind Labs · Apr 20–26, 2026 · Halal · 6–10 ppl">Bekind Labs · 2026-04-20 ~ 04-26 · 할랄 · 6~10인</div>
 </header>
 
 <div class="legend">
-  <span><span class="dot ready"></span>레시피 준비됨 (클릭)</span>
-  <span><span class="dot pending"></span>준비중</span>
-  <span><span class="dot skip"></span>외부</span>
+  <span><span class="dot ready"></span><span data-ko="레시피 준비됨 (클릭)" data-en="Recipe ready (tap)">레시피 준비됨 (클릭)</span></span>
+  <span><span class="dot pending"></span><span data-ko="준비중" data-en="Pending">준비중</span></span>
+  <span><span class="dot skip"></span><span data-ko="외부" data-en="Dining out">외부</span></span>
 </div>
 
-<!-- 월 4/20 -->
+<!-- 월 4/20 / Mon 4/20 -->
 <div class="day-card noservice">
-  <div class="day-header"><span class="day-title">월 4/20</span><span class="day-note">도착 / 요리 없음</span></div>
+  <div class="day-header">
+    <span class="day-title" data-ko="월 4/20" data-en="Mon 4/20">월 4/20</span>
+    <span class="day-note" data-ko="도착 / 요리 없음" data-en="Arrival · No cooking">도착 / 요리 없음</span>
+  </div>
 </div>
 
-<!-- 화 4/21 -->
+<!-- 화 4/21 / Tue 4/21 -->
 <div class="day-card">
-  <div class="day-header"><span class="day-title">화 4/21</span><span class="day-note">정육 도착 전</span></div>
+  <div class="day-header">
+    <span class="day-title" data-ko="화 4/21" data-en="Tue 4/21">화 4/21</span>
+    <span class="day-note" data-ko="정육 도착 전" data-en="Before meat delivery">정육 도착 전</span>
+  </div>
   <div class="meal-row">
-    <div class="meal-label">아침</div>
+    <div class="meal-label" data-ko="아침" data-en="Breakfast">아침</div>
     <div class="meal-body">
-      <a class="dish ready" href="./마카로니치즈.html">마카로니치즈</a>
-      <a class="dish ready" href="./차지키.html">차지키</a>
-      <span class="aside">+ 당근·오이·셀러리 스틱</span>
+      <a class="dish ready" href="./마카로니치즈.html" data-ko="마카로니치즈" data-en="Mac & Cheese">마카로니치즈</a>
+      <a class="dish ready" href="./차지키.html" data-ko="차지키" data-en="Tzatziki">차지키</a>
+      <span class="aside" data-ko="+ 당근·오이·셀러리 스틱" data-en="+ Carrot, Cucumber & Celery sticks">+ 당근·오이·셀러리 스틱</span>
     </div>
   </div>
   <div class="meal-row external">
-    <div class="meal-label">점심</div>
-    <div class="meal-body">🍽 외식 — 돼지국밥</div>
+    <div class="meal-label" data-ko="점심" data-en="Lunch">점심</div>
+    <div class="meal-body"><span data-ko="🍽 외식 — 돼지국밥" data-en="🍽 Dining out — Pork Soup">🍽 외식 — 돼지국밥</span></div>
   </div>
   <div class="meal-row">
-    <div class="meal-label">저녁</div>
+    <div class="meal-label" data-ko="저녁" data-en="Dinner">저녁</div>
     <div class="meal-body">
-      <a class="dish ready" href="./황태국.html">황태국</a>
-      <span class="dish pending">미나리전</span>
-      <a class="dish ready" href="./각종나물.html">각종 나물</a>
-      <span class="aside">+ 밥 + 김치</span>
+      <a class="dish ready" href="./황태국.html" data-ko="황태국" data-en="Dried Pollack Soup">황태국</a>
+      <span class="dish pending" data-ko="미나리전" data-en="Water Parsley Pancake">미나리전</span>
+      <a class="dish ready" href="./각종나물.html" data-ko="각종 나물" data-en="Seasoned Greens">각종 나물</a>
+      <span class="aside" data-ko="+ 밥 + 김치" data-en="+ Rice + Kimchi">+ 밥 + 김치</span>
     </div>
   </div>
 </div>
 
-<!-- 수 4/22 -->
+<!-- 수 4/22 / Wed 4/22 -->
 <div class="day-card">
-  <div class="day-header"><span class="day-title">수 4/22</span><span class="day-note">🥩 정육 도착일</span></div>
+  <div class="day-header">
+    <span class="day-title" data-ko="수 4/22" data-en="Wed 4/22">수 4/22</span>
+    <span class="day-note" data-ko="🥩 정육 도착일" data-en="🥩 Meat delivery day">🥩 정육 도착일</span>
+  </div>
   <div class="meal-row simple">
-    <div class="meal-label">아침</div>
-    <div class="meal-body">🍲 남은 황태국 등</div>
+    <div class="meal-label" data-ko="아침" data-en="Breakfast">아침</div>
+    <div class="meal-body"><span data-ko="🍲 남은 황태국 등" data-en="🍲 Leftover Dried Pollack Soup">🍲 남은 황태국 등</span></div>
   </div>
   <div class="meal-row external">
-    <div class="meal-label">점심</div>
-    <div class="meal-body">🍽 외식 — 채식</div>
+    <div class="meal-label" data-ko="점심" data-en="Lunch">점심</div>
+    <div class="meal-body"><span data-ko="🍽 외식 — 채식" data-en="🍽 Dining out — Vegetarian">🍽 외식 — 채식</span></div>
   </div>
   <div class="meal-row">
-    <div class="meal-label">저녁</div>
+    <div class="meal-label" data-ko="저녁" data-en="Dinner">저녁</div>
     <div class="meal-body">
-      <a class="dish ready" href="./갈비찜.html">갈비찜</a>
-      <span class="dish pending">차돌된장찌개</span>
-      <a class="dish ready" href="./무생채.html">무생채</a>
-      <span class="aside">+ 밥</span>
-      <em style="color:#C95D28; font-size:0.85em;">— 하이라이트 · 신선 정육</em>
+      <a class="dish ready" href="./갈비찜.html" data-ko="갈비찜" data-en="Braised Short Ribs">갈비찜</a>
+      <span class="dish pending" data-ko="차돌된장찌개" data-en="Brisket Doenjang Jjigae">차돌된장찌개</span>
+      <a class="dish ready" href="./무생채.html" data-ko="무생채" data-en="Spicy Radish Salad">무생채</a>
+      <span class="aside" data-ko="+ 밥" data-en="+ Rice">+ 밥</span>
+      <em style="color:#C95D28; font-size:0.85em;" data-ko="— 하이라이트 · 신선 정육" data-en="— Highlight · Fresh meat day">— 하이라이트 · 신선 정육</em>
     </div>
   </div>
 </div>
 
-<!-- 목 4/23 -->
+<!-- 목 4/23 / Thu 4/23 -->
 <div class="day-card">
-  <div class="day-header"><span class="day-title">목 4/23</span></div>
+  <div class="day-header">
+    <span class="day-title" data-ko="목 4/23" data-en="Thu 4/23">목 4/23</span>
+  </div>
   <div class="meal-row">
-    <div class="meal-label">아침</div>
+    <div class="meal-label" data-ko="아침" data-en="Breakfast">아침</div>
     <div class="meal-body">
-      <span class="dish pending">미역국</span>
-      <a class="dish ready" href="./각종나물.html">각종 나물</a>
-      <span class="aside">+ 밥</span>
+      <span class="dish pending" data-ko="미역국" data-en="Seaweed Soup">미역국</span>
+      <a class="dish ready" href="./각종나물.html" data-ko="각종 나물" data-en="Seasoned Greens">각종 나물</a>
+      <span class="aside" data-ko="+ 밥" data-en="+ Rice">+ 밥</span>
     </div>
   </div>
   <div class="meal-row">
-    <div class="meal-label">점심</div>
+    <div class="meal-label" data-ko="점심" data-en="Lunch">점심</div>
     <div class="meal-body">
-      <span class="dish pending">볼로네제 파스타</span>
-      <span class="aside">+ 샐러드</span>
+      <span class="dish pending" data-ko="볼로네제 파스타" data-en="Bolognese Pasta">볼로네제 파스타</span>
+      <span class="aside" data-ko="+ 샐러드" data-en="+ Salad">+ 샐러드</span>
     </div>
   </div>
   <div class="meal-row external">
-    <div class="meal-label">저녁</div>
-    <div class="meal-body">🛵 배달 (요리 없음)</div>
+    <div class="meal-label" data-ko="저녁" data-en="Dinner">저녁</div>
+    <div class="meal-body"><span data-ko="🛵 배달 (요리 없음)" data-en="🛵 Delivery (no cooking)">🛵 배달 (요리 없음)</span></div>
   </div>
 </div>
 
-<!-- 금 4/24 -->
+<!-- 금 4/24 / Fri 4/24 -->
 <div class="day-card">
-  <div class="day-header"><span class="day-title">금 4/24</span></div>
+  <div class="day-header">
+    <span class="day-title" data-ko="금 4/24" data-en="Fri 4/24">금 4/24</span>
+  </div>
   <div class="meal-row simple">
-    <div class="meal-label">아침</div>
-    <div class="meal-body">🍞 토스트 · 씨리얼 + 🍎 과일</div>
+    <div class="meal-label" data-ko="아침" data-en="Breakfast">아침</div>
+    <div class="meal-body"><span data-ko="🍞 토스트 · 씨리얼 + 🍎 과일" data-en="🍞 Toast · Cereal + 🍎 Fruit">🍞 토스트 · 씨리얼 + 🍎 과일</span></div>
   </div>
   <div class="meal-row external">
-    <div class="meal-label">점심</div>
-    <div class="meal-body">🍽 외식 / 🛵 배달</div>
+    <div class="meal-label" data-ko="점심" data-en="Lunch">점심</div>
+    <div class="meal-body"><span data-ko="🍽 외식 / 🛵 배달" data-en="🍽 Dining out / 🛵 Delivery">🍽 외식 / 🛵 배달</span></div>
   </div>
   <div class="meal-row">
-    <div class="meal-label">저녁</div>
+    <div class="meal-label" data-ko="저녁" data-en="Dinner">저녁</div>
     <div class="meal-body">
-      <span class="dish pending">불고기낙지전골</span>
-      <span class="dish pending">잡채</span>
-      <em style="color:#C95D28; font-size:0.85em;">— 한식 잔치</em>
+      <span class="dish pending" data-ko="불고기낙지전골" data-en="Bulgogi & Octopus Hot Pot">불고기낙지전골</span>
+      <span class="dish pending" data-ko="잡채" data-en="Glass Noodles (Japchae)">잡채</span>
+      <em style="color:#C95D28; font-size:0.85em;" data-ko="— 한식 잔치" data-en="— Korean feast night">— 한식 잔치</em>
     </div>
   </div>
 </div>
 
-<!-- 토 4/25 -->
+<!-- 토 4/25 / Sat 4/25 -->
 <div class="day-card">
-  <div class="day-header"><span class="day-title">토 4/25</span></div>
+  <div class="day-header">
+    <span class="day-title" data-ko="토 4/25" data-en="Sat 4/25">토 4/25</span>
+  </div>
   <div class="meal-row simple">
-    <div class="meal-label">아침</div>
-    <div class="meal-body">🍞 토스트 · 씨리얼 + 🍎 과일</div>
+    <div class="meal-label" data-ko="아침" data-en="Breakfast">아침</div>
+    <div class="meal-body"><span data-ko="🍞 토스트 · 씨리얼 + 🍎 과일" data-en="🍞 Toast · Cereal + 🍎 Fruit">🍞 토스트 · 씨리얼 + 🍎 과일</span></div>
   </div>
   <div class="meal-row">
-    <div class="meal-label">점심</div>
+    <div class="meal-label" data-ko="점심" data-en="Lunch">점심</div>
     <div class="meal-body">
-      <span class="dish pending">궁중떡볶이</span>
-      <span class="aside">+ 남은 반찬</span>
+      <span class="dish pending" data-ko="궁중떡볶이" data-en="Royal Tteokbokki">궁중떡볶이</span>
+      <span class="aside" data-ko="+ 남은 반찬" data-en="+ Leftover side dishes">+ 남은 반찬</span>
     </div>
   </div>
   <div class="meal-row external">
-    <div class="meal-label">저녁</div>
-    <div class="meal-body">🍽 외식 / 🛵 배달</div>
+    <div class="meal-label" data-ko="저녁" data-en="Dinner">저녁</div>
+    <div class="meal-body"><span data-ko="🍽 외식 / 🛵 배달" data-en="🍽 Dining out / 🛵 Delivery">🍽 외식 / 🛵 배달</span></div>
   </div>
 </div>
 
-<!-- 일 4/26 -->
+<!-- 일 4/26 / Sun 4/26 -->
 <div class="day-card noservice">
-  <div class="day-header"><span class="day-title">일 4/26</span><span class="day-note">종료 / 요리 없음</span></div>
+  <div class="day-header">
+    <span class="day-title" data-ko="일 4/26" data-en="Sun 4/26">일 4/26</span>
+    <span class="day-note" data-ko="종료 / 요리 없음" data-en="Departure · No cooking">종료 / 요리 없음</span>
+  </div>
 </div>
 
 <div class="summary">
-  <h2>📋 레시피 전자화 진행률</h2>
+  <h2 data-ko="📋 레시피 전자화 진행률" data-en="📋 Recipe Digitization Progress">📋 레시피 전자화 진행률</h2>
   <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
   <div id="progressText" style="text-align:center; font-weight:bold;"></div>
   <div style="margin-top:10px; color:#666; font-size:0.88em;" id="pendingList"></div>
 </div>
 
 <footer>
-  요리명 클릭 시 해당 레시피로 이동 · 준비중 항목은 손글씨 사진 업로드 시 활성화<br>
-  Heewon @ Bekind Labs · 2026-04-19 생성
+  <span data-ko="요리명 클릭 시 해당 레시피로 이동 · 준비중 항목은 레시피 추가 시 활성화" data-en="Tap any dish to view its recipe · Pending items will be activated as recipes are added">요리명 클릭 시 해당 레시피로 이동 · 준비중 항목은 레시피 추가 시 활성화</span><br>
+  Heewon @ Bekind Labs · 2026-04-19
 </footer>
 
 <script>
-  // Count recipe progress
+  let currentLang = 'ko';
+
+  // ── 진행률 계산 ──
   const allDishes = document.querySelectorAll('.dish');
   const ready = document.querySelectorAll('.dish.ready');
   const pending = document.querySelectorAll('.dish.pending');
-  const uniqPending = [...new Set([...pending].map(d => d.textContent.trim()))];
-
   const pct = allDishes.length ? Math.round((ready.length / allDishes.length) * 100) : 0;
   document.getElementById('progress').style.width = pct + '%';
-  document.getElementById('progressText').textContent = ready.length + ' / ' + allDishes.length + ' 요리 완료 (' + pct + '%)';
-  document.getElementById('pendingList').textContent = '준비중: ' + uniqPending.join(', ');
+
+  function updateProgress() {
+    const uniqPending = [...new Set([...pending].map(d => (d.dataset[currentLang] || d.textContent).trim()))];
+    if (currentLang === 'ko') {
+      document.getElementById('progressText').textContent = ready.length + ' / ' + allDishes.length + ' 요리 완료 (' + pct + '%)';
+      document.getElementById('pendingList').textContent = '준비중: ' + uniqPending.join(', ');
+    } else {
+      document.getElementById('progressText').textContent = ready.length + ' / ' + allDishes.length + ' dishes ready (' + pct + '%)';
+      document.getElementById('pendingList').textContent = 'Pending: ' + uniqPending.join(', ');
+    }
+  }
+
+  // ── 언어 전환 ──
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.title = lang === 'ko'
+      ? '2026 트래커부트 리트리트 식단 · Bekind Labs'
+      : '2026 TrackerBoot Retreat Menu · Bekind Labs';
+    document.getElementById('langBtn').textContent = lang === 'ko' ? '🌐 EN' : '🌐 한국어';
+
+    document.querySelectorAll('[data-ko]').forEach(el => {
+      el.textContent = el.dataset[lang] || el.dataset.ko;
+    });
+
+    updateProgress();
+  }
+
+  function toggleLang() {
+    setLang(currentLang === 'ko' ? 'en' : 'ko');
+  }
+
+  updateProgress();
 </script>
 </body>
 </html>
