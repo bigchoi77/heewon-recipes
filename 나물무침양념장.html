@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나물무침 양념장 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; padding: 20px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 2em; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.9em; }
+  .tags { margin: 10px 0 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    background: #E8EDF1; color: #4A6280;
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 0.82em; font-weight: 600;
+  }
+  .tag.halal { background: #D4F1DE; color: #22633B; }
+
+  /* ── 인원수 컨트롤 ── */
+  .serving-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #2E4057; color: white;
+    padding: 12px 20px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin: 20px 0;
+    box-shadow: 0 3px 12px rgba(46,64,87,0.25);
+  }
+  .serving-bar label { font-size: 0.95em; font-weight: 600; white-space: nowrap; }
+  .serving-controls { display: flex; align-items: center; gap: 10px; }
+  .btn-round {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-size: 1.2em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-round:hover { background: rgba(255,255,255,0.3); }
+  #servingCount { font-size: 1.5em; font-weight: bold; min-width: 36px; text-align: center; }
+  .serving-note { font-size: 0.8em; opacity: 0.75; }
+
+  section { background: white; border-radius: 14px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(46,64,87,0.07); }
+  section h2 { margin: 0 0 14px; font-size: 1.05em; color: #2E4057; border-bottom: 2px solid #E8EDF1; padding-bottom: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; }
+  thead th {
+    background: #E8EDF1; padding: 8px 10px;
+    text-align: left; font-weight: 600; color: #4A6280;
+  }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+  td:not(:first-child) { text-align: center; }
+  td.scaled { font-weight: 700; color: #22633B; }
+  .unit { font-size: 0.82em; color: #888; }
+
+  .ratio-bar {
+    display: flex; align-items: stretch;
+    border-radius: 10px; overflow: hidden;
+    margin: 14px 0; height: 44px; font-size: 0.82em;
+  }
+  .ratio-item {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 6px; color: white; font-weight: 700;
+    line-height: 1.2;
+  }
+  .ratio-item span { font-size: 0.85em; opacity: 0.85; }
+
+  .note-card {
+    background: #F0F7FF; border-radius: 10px;
+    padding: 12px 16px; font-size: 0.88em; color: #4A6280;
+    margin-top: 10px;
+  }
+  .note-card strong { color: #2E4057; }
+  .tip {
+    background: #FFF8F0; border-left: 3px solid #F6AD55;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px; margin-top: 10px;
+    font-size: 0.88em; color: #7B5A2B;
+  }
+  .sub-table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin-top: 8px; }
+  .sub-table td { padding: 6px 8px; border-bottom: 1px solid #f0f0f0; }
+  .sub-table td:first-child { color: #4A6280; }
+  .sub-table td:last-child { font-weight: 600; color: #2E4057; }
+
+  footer { text-align: center; color: #aaa; font-size: 0.78em; margin-top: 30px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌿 나물무침 양념장</h1>
+  <div class="subtitle">고사리 · 시금치 · 콩나물 · 취나물 등 모든 나물에</div>
+  <div class="tags">
+    <span class="tag halal">✓ 할랄</span>
+    <span class="tag">한식</span>
+    <span class="tag">양념</span>
+    <span class="tag">⏱ 5분</span>
+  </div>
+</header>
+
+<!-- 인원수 컨트롤 -->
+<div class="serving-bar">
+  <label>인원수</label>
+  <div class="serving-controls">
+    <button class="btn-round" onclick="changeServing(-1)">−</button>
+    <span id="servingCount">8</span>
+    <button class="btn-round" onclick="changeServing(1)">+</button>
+  </div>
+  <span class="serving-note">명 기준</span>
+</div>
+
+<!-- 비율 바 -->
+<section>
+  <h2>⚖️ 황금 비율</h2>
+  <div class="ratio-bar">
+    <div class="ratio-item" style="flex:1; background:#3B7DD8;">국간장<span>1</span></div>
+    <div class="ratio-item" style="flex:0.5; background:#5A9CF0;">마늘<span>½</span></div>
+    <div class="ratio-item" style="flex:1; background:#2E7D52;">쌈장<span>1</span></div>
+    <div class="ratio-item" style="flex:1; background:#7B6B3D;">들기름<span>1</span></div>
+    <div class="ratio-item" style="flex:1; background:#C5A028;">통깨<span>1</span></div>
+    <div class="ratio-item" style="flex:1; background:#C06030;">미림<span>1</span></div>
+  </div>
+  <div class="note-card">
+    기준 단위는 <strong>큰술(T)</strong>. 인원수에 따라 아래 표의 양을 참고하세요.
+  </div>
+</section>
+
+<!-- 재료표 -->
+<section>
+  <h2>🛒 재료</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>재료</th>
+        <th>1인분</th>
+        <th>현재 (<span id="hN">8</span>인분)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>국간장 (조선간장)</td>
+        <td>1 <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+      </tr>
+      <tr>
+        <td>다진마늘</td>
+        <td>½ <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="작은술" data-round="half"></span></td>
+      </tr>
+      <tr>
+        <td>쌈장</td>
+        <td>1 <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+      </tr>
+      <tr>
+        <td>들기름</td>
+        <td>1 <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+      </tr>
+      <tr>
+        <td>통깨</td>
+        <td>1 <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+      </tr>
+      <tr>
+        <td>미림</td>
+        <td>1 <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="작은술"></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 미림 대체 -->
+  <div class="tip">
+    <strong>미림이 없을 때</strong><br>
+    <table class="sub-table">
+      <tr><td>매실청</td><td>동량(1:1) → 가장 자연스러운 대체</td></tr>
+      <tr><td>설탕</td><td>절반량(1→½) → 단맛만 보충</td></tr>
+      <tr><td>생략</td><td>간장을 조금 줄이고 들기름을 살짝 늘리면 균형 유지</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 사용법 -->
+<section>
+  <h2>👩‍🍳 사용법</h2>
+  <ol style="margin:0; padding-left:20px; font-size:0.93em; line-height:2;">
+    <li>데친/볶은 나물의 물기를 꼭 짠다.</li>
+    <li>양념장 재료를 모두 섞는다.</li>
+    <li>나물에 양념장을 넣고 조물조물 무친다.</li>
+    <li>간을 보고 부족하면 국간장으로 조절.</li>
+  </ol>
+  <div class="note-card" style="margin-top:12px;">
+    <strong>💡 나물별 팁</strong><br>
+    시금치·콩나물처럼 수분이 많은 나물은 양념장을 조금 줄이고,
+    고사리·취나물처럼 건조한 나물은 들기름을 조금 더 넣으면 촉촉해요.
+  </div>
+</section>
+
+<div style="margin-bottom:8px; margin-top:20px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<footer>Heewon @ Bekind Labs · 합숙 2026-04-20~04-26</footer>
+
+<script>
+  let N = 8;
+
+  function fmt(val, unit, roundType) {
+    let v = val * N;
+    if (roundType === 'half') {
+      v = Math.round(v * 2) / 2;
+    } else {
+      if (v >= 100) v = Math.round(v / 5) * 5;
+      else if (v >= 10) v = Math.round(v);
+      else v = Math.round(v * 2) / 2;
+    }
+    if (v === Math.floor(v)) return v + ' ' + unit;
+    return v + ' ' + unit;
+  }
+
+  function update() {
+    document.getElementById('servingCount').textContent = N;
+    document.getElementById('hN').textContent = N;
+    document.querySelectorAll('[data-base]').forEach(el => {
+      el.textContent = fmt(parseFloat(el.dataset.base), el.dataset.unit, el.dataset.round || null);
+    });
+  }
+
+  function changeServing(d) {
+    N = Math.max(1, N + d);
+    update();
+  }
+
+  update();
+</script>
+</body>
+</html>
