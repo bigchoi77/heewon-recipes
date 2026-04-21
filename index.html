@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2026 트래커부트 리트리트 식단 · Bekind Labs</title>
+<title>2026 트래커 부트 리트리트 식단 · Bekind Labs</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -16,13 +16,12 @@
     background: #fafafa;
     -webkit-text-size-adjust: 100%;
   }
-  header { text-align: center; padding: 16px 0 8px; position: relative; }
-  h1 { margin: 0 0 4px; font-size: 1.7em; letter-spacing: 1px; }
-  .subtitle { color: #888; font-size: 0.9em; font-style: italic; }
-
+  .lang-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 4px;
+  }
   #langBtn {
-    position: absolute;
-    top: 16px; right: 0;
     background: #E8EDF1; border: none;
     color: #4A6280; font-size: 0.82em;
     font-weight: 700; border-radius: 20px;
@@ -31,6 +30,9 @@
     transition: background 0.15s, color 0.15s;
   }
   #langBtn:hover { background: #2E4057; color: white; }
+  header { text-align: center; padding: 8px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 1.7em; letter-spacing: 1px; }
+  .subtitle { color: #888; font-size: 0.9em; font-style: italic; }
 
   .legend {
     display: flex; justify-content: center; gap: 16px;
@@ -138,9 +140,11 @@
 </head>
 <body>
 
-<header>
+<div class="lang-bar">
   <button id="langBtn" onclick="toggleLang()">🌐 EN</button>
-  <h1 data-ko="2026 트래커부트 리트리트 식단" data-en="2026 TrackerBoot Retreat Menu">2026 트래커부트 리트리트 식단</h1>
+</div>
+<header>
+  <h1 data-ko="2026 트래커 부트 리트리트 식단" data-en="2026 Tracker Boot Retreat Menu">2026 트래커 부트 리트리트 식단</h1>
   <div class="subtitle" data-ko="Bekind Labs · 2026-04-20 ~ 04-26 · 할랄 · 6~10인" data-en="Bekind Labs · Apr 20–26, 2026 · Halal · 6–10 ppl">Bekind Labs · 2026-04-20 ~ 04-26 · 할랄 · 6~10인</div>
 </header>
 
@@ -330,8 +334,8 @@
     currentLang = lang;
     document.documentElement.lang = lang;
     document.title = lang === 'ko'
-      ? '2026 트래커부트 리트리트 식단 · Bekind Labs'
-      : '2026 TrackerBoot Retreat Menu · Bekind Labs';
+      ? '2026 트래커 부트 리트리트 식단 · Bekind Labs'
+      : '2026 Tracker Boot Retreat Menu · Bekind Labs';
     document.getElementById('langBtn').textContent = lang === 'ko' ? '🌐 EN' : '🌐 한국어';
 
     document.querySelectorAll('[data-ko]').forEach(el => {
