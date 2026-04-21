@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오징어 콩나물국 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; padding: 20px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 2em; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.9em; }
+  .tags { margin: 10px 0 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tag { background: #E8EDF1; color: #4A6280; border-radius: 20px; padding: 4px 12px; font-size: 0.82em; font-weight: 600; }
+  .tag.halal { background: #D4F1DE; color: #22633B; }
+
+  .serving-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #0E6B7A; color: white;
+    padding: 12px 20px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin: 20px 0;
+    box-shadow: 0 3px 12px rgba(14,107,122,0.3);
+  }
+  .serving-bar label { font-size: 0.95em; font-weight: 600; white-space: nowrap; }
+  .serving-controls { display: flex; align-items: center; gap: 10px; }
+  .btn-round {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-size: 1.2em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-round:hover { background: rgba(255,255,255,0.3); }
+  #servingCount { font-size: 1.5em; font-weight: bold; min-width: 50px; text-align: center; }
+
+  section { background: white; border-radius: 14px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(46,64,87,0.07); }
+  section h2 { margin: 0 0 14px; font-size: 1.05em; color: #2E4057; border-bottom: 2px solid #E8EDF1; padding-bottom: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; }
+  thead th { background: #E8EDF1; padding: 8px 10px; text-align: left; font-weight: 600; color: #4A6280; }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+  td:not(:first-child) { text-align: center; }
+  td.scaled { font-weight: 700; color: #0E6B7A; }
+  .unit { font-size: 0.82em; color: #888; }
+  tr.group-header td { background: #EAF5F7; font-weight: bold; color: #0E6B7A; font-size: 0.85em; padding: 6px 10px; border-bottom: none; }
+
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; align-items: start; }
+  .steps li:last-child { border-bottom: 0; }
+  .step-num { width: 28px; height: 28px; background: #0E6B7A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: bold; flex-shrink: 0; }
+  .step-text { font-size: 0.93em; padding-top: 3px; }
+  .step-text .amt { background: #D4EEF2; color: #0E6B7A; font-weight: 700; border-radius: 4px; padding: 1px 6px; font-size: 0.92em; }
+  .step-text em { color: #C95D28; font-style: normal; font-weight: 600; }
+  .tip { background: #FFF8F0; border-left: 3px solid #F6AD55; border-radius: 0 8px 8px 0; padding: 8px 12px; margin-top: 8px; font-size: 0.87em; color: #7B5A2B; }
+  .note-card { background: #EAF5F7; border-radius: 10px; padding: 12px 16px; font-size: 0.88em; color: #0A4A56; margin-top: 10px; }
+  .note-card strong { color: #0E6B7A; }
+
+  footer { text-align: center; color: #aaa; font-size: 0.78em; margin-top: 30px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<header>
+  <h1>🦑 오징어 콩나물국</h1>
+  <div class="subtitle">맑고 시원한 국물 · 남은 오징어 활용</div>
+  <div class="tags">
+    <span class="tag halal">✓ 할랄</span>
+    <span class="tag">한식</span>
+    <span class="tag">국</span>
+    <span class="tag">⏱ 20분</span>
+  </div>
+</header>
+
+<div class="serving-bar">
+  <label>인원</label>
+  <div class="serving-controls">
+    <button class="btn-round" onclick="changeServing(-1)">−</button>
+    <span id="servingCount">4명</span>
+    <button class="btn-round" onclick="changeServing(1)">+</button>
+  </div>
+</div>
+
+<!-- 재료 -->
+<section>
+  <h2>🛒 재료</h2>
+  <table>
+    <thead>
+      <tr><th>재료</th><th>4인 기준</th><th>현재 (<span id="hN">4</span>인)</th></tr>
+    </thead>
+    <tbody>
+      <tr class="group-header"><td colspan="3">주재료</td></tr>
+      <tr>
+        <td>콩나물</td>
+        <td>350 <span class="unit">g</span></td>
+        <td class="scaled"><span data-base="350" data-unit="g" data-type="g"></span></td>
+      </tr>
+      <tr>
+        <td>오징어 (남은 것)</td>
+        <td colspan="2" style="text-align:center; color:#888;">있는 만큼 — 많을수록 국물이 진해요</td>
+      </tr>
+      <tr>
+        <td>물</td>
+        <td>1.5 <span class="unit">ℓ</span></td>
+        <td class="scaled"><span data-base="1.5" data-unit="ℓ" data-type="L"></span></td>
+      </tr>
+      <tr class="group-header"><td colspan="3">양념·향신채</td></tr>
+      <tr>
+        <td>다진마늘</td>
+        <td>2 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="2" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>새우젓</td>
+        <td>2 <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="2" data-unit="작은술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>대파</td>
+        <td>1 <span class="unit">대</span></td>
+        <td class="scaled"><span data-base="1" data-unit="대" data-type="whole"></span></td>
+      </tr>
+      <tr>
+        <td>청고추 / 홍고추</td>
+        <td>각 1 <span class="unit">개</span></td>
+        <td class="scaled"><span data-base="1" data-unit="개씩" data-type="whole"></span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note-card" style="margin-top:12px;">
+    💡 <strong>새우젓이 포인트</strong> — 소금 대신 새우젓으로 간하면 국물이 훨씬 시원하고 감칠맛이 깊어져요.
+  </div>
+</section>
+
+<!-- 조리 순서 -->
+<section>
+  <h2>👩‍🍳 조리 순서</h2>
+  <ol class="steps">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-text">
+        냄비에 콩나물 + 다진마늘 <span class="amt" data-step="2" data-stepunit="큰술" data-steptype="sp"></span> + 물 <span class="amt" data-step="1" data-stepunit="ℓ" data-steptype="L"></span>를 넣고 <em>뚜껑 열고</em> 중불로 끓인다.
+        <div class="tip">뚜껑을 열어야 콩나물 비린내가 날아가요. 뚜껑을 닫거나 여는 중간에 열면 비린내가 남아요.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-text">
+        팔팔 끓어오르면 나머지 물 <span class="amt" data-step="0.5" data-stepunit="ℓ" data-steptype="L"></span>를 추가해 온도를 낮춰준다.
+        <div class="tip">찬물을 추가하면 콩나물이 아삭아삭해져요.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-text">
+        다시 끓어오르면 <em>오징어를 넣고 살짝만 익힌다</em>.
+        <div class="tip">센불에 오래 끓이면 오징어가 질겨져요. 김이 오르는 상태에서 2~3분이면 충분해요.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <em>불을 끄고</em> 새우젓 <span class="amt" data-step="2" data-stepunit="작은술" data-steptype="sp"></span>으로 간을 맞춘다. 싱거우면 조금씩 추가.
+      </div>
+    </li>
+    <li>
+      <div class="step-num">5</div>
+      <div class="step-text">
+        대파·청홍고추를 썰어 넣고 마무리.
+      </div>
+    </li>
+  </ol>
+</section>
+
+<div style="margin-top:20px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<footer>Heewon @ Bekind Labs · 합숙 2026-04-20~04-26</footer>
+
+<script>
+  let N = 4;
+  const BASE = 4;
+
+  function scale(v) { return v * (N / BASE); }
+
+  function fmt(el) {
+    const base = parseFloat(el.dataset.base);
+    const unit = el.dataset.unit;
+    const type = el.dataset.type;
+    const v = scale(base);
+    if (type === 'g') {
+      const r = Math.round(v / 10) * 10;
+      return r + ' ' + unit;
+    } else if (type === 'L') {
+      const r = Math.round(v * 4) / 4;
+      return r + ' ' + unit;
+    } else if (type === 'sp') {
+      const r = Math.round(v * 2) / 2;
+      return r + ' ' + unit;
+    } else if (type === 'whole') {
+      return Math.ceil(v) + ' ' + unit;
+    }
+    return v + ' ' + unit;
+  }
+
+  function fmtStep(el) {
+    const base = parseFloat(el.dataset.step);
+    const unit = el.dataset.stepunit;
+    const type = el.dataset.steptype;
+    const v = scale(base);
+    if (type === 'L') return (Math.round(v * 4) / 4) + ' ' + unit;
+    if (type === 'sp') return (Math.round(v * 2) / 2) + ' ' + unit;
+    return v + ' ' + unit;
+  }
+
+  function update() {
+    document.getElementById('servingCount').textContent = N + '명';
+    document.getElementById('hN').textContent = N;
+    document.querySelectorAll('[data-base]').forEach(el => el.textContent = fmt(el));
+    document.querySelectorAll('[data-step]').forEach(el => el.textContent = fmtStep(el));
+  }
+
+  function changeServing(d) {
+    N = Math.max(1, N + d);
+    update();
+  }
+
+  update();
+</script>
+</body>
+</html>
