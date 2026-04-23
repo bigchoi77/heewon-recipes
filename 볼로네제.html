@@ -374,7 +374,7 @@
     if (type === 'g')     return (Math.round(v / 10) * 10) + ' ' + unit;
     if (type === 'ml')    return (Math.round(v / 10) * 10) + ' ' + unit;
     if (type === 'sp')    return (Math.round(v * 2) / 2) + ' ' + unit;
-    if (type === 'whole') return Math.ceil(v) + ' ' + unit;
+    if (type === 'whole') return (Math.round(v * 4) / 4) + ' ' + unit;
     return v + ' ' + unit;
   }
 
