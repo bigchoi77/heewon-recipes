@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>볼로네제 파스타 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; padding: 20px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 2em; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.9em; }
+  .tags { margin: 10px 0 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tag { background: #E8EDF1; color: #4A6280; border-radius: 20px; padding: 4px 12px; font-size: 0.82em; font-weight: 600; }
+  .tag.halal { background: #D4F1DE; color: #22633B; }
+
+  /* 탭 */
+  .tabs { display: flex; gap: 8px; margin: 20px 0 0; }
+  .tab-btn {
+    flex: 1; padding: 12px 8px; border: none; border-radius: 12px 12px 0 0;
+    font-size: 0.95em; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: background 0.15s, color 0.15s;
+    background: #E8EDF1; color: #4A6280;
+  }
+  .tab-btn.classic.active { background: #9B2714; color: white; }
+  .tab-btn.halal.active  { background: #22633B; color: white; }
+  .tab-btn:not(.active):hover { background: #D0D8E4; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* 인원 바 */
+  .serving-bar {
+    position: sticky; top: 0; z-index: 100;
+    color: white;
+    padding: 12px 20px; border-radius: 0 0 14px 14px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin: 0 0 16px;
+  }
+  .serving-bar.classic { background: #9B2714; box-shadow: 0 3px 12px rgba(155,39,20,0.3); }
+  .serving-bar.halal   { background: #22633B; box-shadow: 0 3px 12px rgba(34,99,59,0.3); }
+  .serving-bar label { font-size: 0.95em; font-weight: 600; white-space: nowrap; }
+  .serving-controls { display: flex; align-items: center; gap: 10px; }
+  .btn-round {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-size: 1.2em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-round:hover { background: rgba(255,255,255,0.3); }
+  .serving-count { font-size: 1.5em; font-weight: bold; min-width: 50px; text-align: center; }
+
+  section { background: white; border-radius: 14px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(46,64,87,0.07); }
+  section h2 { margin: 0 0 14px; font-size: 1.05em; color: #2E4057; border-bottom: 2px solid #E8EDF1; padding-bottom: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; }
+  thead th { background: #E8EDF1; padding: 8px 10px; text-align: left; font-weight: 600; color: #4A6280; }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+  td:not(:first-child) { text-align: center; }
+  .classic-tab td.scaled { font-weight: 700; color: #9B2714; }
+  .halal-tab   td.scaled { font-weight: 700; color: #22633B; }
+  .unit { font-size: 0.82em; color: #888; }
+  .classic-tab tr.group-header td { background: #FBEAE7; font-weight: bold; color: #9B2714; font-size: 0.85em; padding: 6px 10px; border-bottom: none; }
+  .halal-tab   tr.group-header td { background: #D4F1DE; font-weight: bold; color: #22633B; font-size: 0.85em; padding: 6px 10px; border-bottom: none; }
+
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; align-items: start; }
+  .steps li:last-child { border-bottom: 0; }
+  .classic-tab .step-num { width: 28px; height: 28px; background: #9B2714; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: bold; flex-shrink: 0; }
+  .halal-tab   .step-num { width: 28px; height: 28px; background: #22633B; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: bold; flex-shrink: 0; }
+  .step-text { font-size: 0.93em; padding-top: 3px; }
+  .classic-tab .step-text .amt { background: #FBEAE7; color: #9B2714; font-weight: 700; border-radius: 4px; padding: 1px 6px; font-size: 0.92em; }
+  .halal-tab   .step-text .amt { background: #D4F1DE; color: #22633B; font-weight: 700; border-radius: 4px; padding: 1px 6px; font-size: 0.92em; }
+  .step-text em { color: #C95D28; font-style: normal; font-weight: 600; }
+  .tip { background: #FFF8F0; border-left: 3px solid #F6AD55; border-radius: 0 8px 8px 0; padding: 8px 12px; margin-top: 8px; font-size: 0.87em; color: #7B5A2B; }
+  .classic-tab .note-card { background: #FBEAE7; border-radius: 10px; padding: 12px 16px; font-size: 0.88em; color: #6B1A0A; margin-top: 10px; }
+  .classic-tab .note-card strong { color: #9B2714; }
+  .halal-tab   .note-card { background: #D4F1DE; border-radius: 10px; padding: 12px 16px; font-size: 0.88em; color: #1A4A2A; margin-top: 10px; }
+  .halal-tab   .note-card strong { color: #22633B; }
+
+  footer { text-align: center; color: #aaa; font-size: 0.78em; margin-top: 30px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<header>
+  <h1>🍝 볼로네제 파스타</h1>
+  <div class="subtitle">진하고 깊은 미트 소스 · 오래 끓일수록 맛있어요</div>
+  <div class="tags">
+    <span class="tag">이탈리안</span>
+    <span class="tag">파스타</span>
+    <span class="tag">⏱ 1.5~2시간</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn classic active" onclick="switchTab('classic')">🥩 일반 (판체타 포함)</button>
+  <button class="tab-btn halal"   onclick="switchTab('halal')">✓ 할랄 (소고기만)</button>
+</div>
+
+<!-- ══════════════ 일반 버전 ══════════════ -->
+<div class="tab-content classic-tab active" id="tab-classic">
+
+  <div class="serving-bar classic">
+    <label>인원</label>
+    <div class="serving-controls">
+      <button class="btn-round" onclick="changeServing('classic',-1)">−</button>
+      <span class="serving-count" id="cCount">4명</span>
+      <button class="btn-round" onclick="changeServing('classic',1)">+</button>
+    </div>
+  </div>
+
+  <section>
+    <h2>🛒 재료</h2>
+    <table>
+      <thead><tr><th>재료</th><th>4인 기준</th><th>현재 (<span id="cN">4</span>인)</th></tr></thead>
+      <tbody>
+        <tr class="group-header"><td colspan="3">고기</td></tr>
+        <tr><td>베이컨 / 판체타</td><td>100 <span class="unit">g</span></td><td class="scaled"><span data-tab="c" data-base="100" data-unit="g" data-type="g"></span></td></tr>
+        <tr><td>갈은 소고기</td><td>300 <span class="unit">g</span></td><td class="scaled"><span data-tab="c" data-base="300" data-unit="g" data-type="g"></span></td></tr>
+        <tr><td>갈은 돼지고기</td><td>200 <span class="unit">g</span></td><td class="scaled"><span data-tab="c" data-base="200" data-unit="g" data-type="g"></span></td></tr>
+        <tr class="group-header"><td colspan="3">소스</td></tr>
+        <tr><td>토마토 캔</td><td>1 <span class="unit">캔 (400g)</span></td><td class="scaled"><span data-tab="c" data-base="1" data-unit="캔" data-type="whole"></span></td></tr>
+        <tr><td>토마토페이스트</td><td>2 <span class="unit">큰술</span></td><td class="scaled"><span data-tab="c" data-base="2" data-unit="큰술" data-type="sp"></span></td></tr>
+        <tr><td>레드와인 (카베르네 소비뇽)</td><td>150 <span class="unit">ml</span></td><td class="scaled"><span data-tab="c" data-base="150" data-unit="ml" data-type="ml"></span></td></tr>
+        <tr><td>브라운스톡</td><td>300 <span class="unit">ml</span></td><td class="scaled"><span data-tab="c" data-base="300" data-unit="ml" data-type="ml"></span></td></tr>
+        <tr class="group-header"><td colspan="3">향신채</td></tr>
+        <tr><td>양파</td><td>1 <span class="unit">개</span></td><td class="scaled"><span data-tab="c" data-base="1" data-unit="개" data-type="whole"></span></td></tr>
+        <tr><td>당근</td><td>1 <span class="unit">개</span></td><td class="scaled"><span data-tab="c" data-base="1" data-unit="개" data-type="whole"></span></td></tr>
+        <tr><td>셀러리</td><td>2 <span class="unit">대</span></td><td class="scaled"><span data-tab="c" data-base="2" data-unit="대" data-type="whole"></span></td></tr>
+        <tr><td>대파</td><td>1 <span class="unit">대</span></td><td class="scaled"><span data-tab="c" data-base="1" data-unit="대" data-type="whole"></span></td></tr>
+        <tr class="group-header"><td colspan="3">마무리 · 기타</td></tr>
+        <tr><td>버터</td><td>3 <span class="unit">큰술 (많이)</span></td><td class="scaled"><span data-tab="c" data-base="3" data-unit="큰술" data-type="sp"></span></td></tr>
+        <tr><td>올리브유</td><td>2 <span class="unit">큰술</span></td><td class="scaled"><span data-tab="c" data-base="2" data-unit="큰술" data-type="sp"></span></td></tr>
+        <tr><td>파마산치즈</td><td colspan="2" style="text-align:center;color:#888;">취향껏 — 아낌없이</td></tr>
+        <tr><td>부케가르니</td><td colspan="2" style="text-align:center;color:#888;">1묶음 (월계수잎·타임·파슬리대)</td></tr>
+        <tr><td>타임잎</td><td colspan="2" style="text-align:center;color:#888;">마무리용 적당량</td></tr>
+        <tr><td>소금·후추</td><td colspan="2" style="text-align:center;color:#888;">간 맞추기용</td></tr>
+        <tr class="group-header"><td colspan="3">파스타면</td></tr>
+        <tr><td>스파게티 / 탈리아텔레</td><td>320 <span class="unit">g</span></td><td class="scaled"><span data-tab="c" data-base="320" data-unit="g" data-type="g"></span></td></tr>
+      </tbody>
+    </table>
+    <div class="note-card" style="margin-top:12px;">
+      💡 <strong>면 선택 팁</strong> — 볼로네제엔 넓적한 탈리아텔레가 잘 어울려요. 면수는 꼭 소금을 넉넉히 넣어 끓이세요.
+    </div>
+  </section>
+
+  <section>
+    <h2>👩‍🍳 조리 순서</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-text">
+          베이컨 / 판체타를 <em>잘게 썰어</em> 올리브유 없이 팬에 중불로 볶아 기름을 뺀다.
+          <div class="tip">판체타 자체 기름이 충분해요. 이 기름이 소스 베이스가 됩니다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-text">
+          갈은 소고기 + 돼지고기를 넣고 <em>소금·후추</em>로 밑간하며 강불에 볶는다.
+          <div class="tip">⚠️ <strong>물이 생기지 않게 하는 게 핵심.</strong> 수분이 나오면 증발시켜가며 고기를 완전히 지져야 소스가 진해져요. 절대 뚜껑 닫지 말 것.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-text">
+          고기에서 나온 <em>기름을 걷어낸다</em>. (체나 숟가락으로 기름층만 제거)
+          <div class="tip">기름을 걷어야 소스가 텁텁하지 않고 깔끔해져요. 약간은 남겨도 됩니다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">4</div>
+        <div class="step-text">
+          걷어낸 고기기름(+ 올리브유 <span class="amt" data-tab="cs" data-step="2" data-stepunit="큰술" data-steptype="sp"></span>)에 <em>양파·당근·셀러리·대파를 잘게 다져</em> 넣고 중불로 충분히 볶는다.
+          <div class="tip">채소가 갈색빛이 날 때까지 충분히 볶을수록 단맛과 깊이가 생겨요. 10분 이상.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">5</div>
+        <div class="step-text">채소가 충분히 볶아지면 <em>고기를 다시 넣어</em> 합친다.</div>
+      </li>
+      <li>
+        <div class="step-num">6</div>
+        <div class="step-text">
+          토마토페이스트 <span class="amt" data-tab="cs" data-step="2" data-stepunit="큰술" data-steptype="sp"></span>를 <em>소량</em> 넣고 1~2분 볶아 신맛을 날린다.
+          <div class="tip">페이스트를 직접 볶으면 감칠맛이 훨씬 깊어져요.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">7</div>
+        <div class="step-text">레드와인 <span class="amt" data-tab="cs" data-step="150" data-stepunit="ml" data-steptype="ml"></span>을 붓고 <em>알코올이 날아갈 때까지</em> 강불로 졸인다.</div>
+      </li>
+      <li>
+        <div class="step-num">8</div>
+        <div class="step-text">토마토 캔을 넣고 으깨가며 섞는다.</div>
+      </li>
+      <li>
+        <div class="step-num">9</div>
+        <div class="step-text">브라운스톡 <span class="amt" data-tab="cs" data-step="300" data-stepunit="ml" data-steptype="ml"></span>을 붓는다.</div>
+      </li>
+      <li>
+        <div class="step-num">10</div>
+        <div class="step-text">
+          부케가르니를 넣고 <em>뚜껑 열고 약불~중불로 한참 끓인다</em>. (최소 45분, 1시간 이상 권장)
+          <div class="tip">냄비에 눌어붙지 않게 가끔 저어주세요. 너무 뻑뻑하면 스톡 조금 추가.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">11</div>
+        <div class="step-text">
+          부케가르니를 건져내고 <em>버터를 아낌없이</em> 넣어 녹인다.
+          <div class="tip">버터가 소스를 부드럽고 윤기있게 만들어요.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">12</div>
+        <div class="step-text">
+          삶은 파스타면을 소스에 넣고 면수 조금과 함께 버무린다. <em>타임잎</em>을 올리고 파마산치즈를 갈아 마무리.
+          <div class="tip">면을 1분 덜 삶고 소스와 버무리면 면에 소스가 잘 배어요.</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+</div>
+
+<!-- ══════════════ 할랄 버전 ══════════════ -->
+<div class="tab-content halal-tab" id="tab-halal">
+
+  <div class="serving-bar halal">
+    <label>인원</label>
+    <div class="serving-controls">
+      <button class="btn-round" onclick="changeServing('halal',-1)">−</button>
+      <span class="serving-count" id="hCount">4명</span>
+      <button class="btn-round" onclick="changeServing('halal',1)">+</button>
+    </div>
+  </div>
+
+  <section>
+    <h2>🛒 재료</h2>
+    <table>
+      <thead><tr><th>재료</th><th>4인 기준</th><th>현재 (<span id="hN">4</span>인)</th></tr></thead>
+      <tbody>
+        <tr class="group-header"><td colspan="3">고기</td></tr>
+        <tr><td>갈은 소고기</td><td>500 <span class="unit">g</span></td><td class="scaled"><span data-tab="h" data-base="500" data-unit="g" data-type="g"></span></td></tr>
+        <tr class="group-header"><td colspan="3">소스</td></tr>
+        <tr><td>토마토 캔</td><td>1 <span class="unit">캔 (400g)</span></td><td class="scaled"><span data-tab="h" data-base="1" data-unit="캔" data-type="whole"></span></td></tr>
+        <tr><td>토마토페이스트</td><td>2 <span class="unit">큰술</span></td><td class="scaled"><span data-tab="h" data-base="2" data-unit="큰술" data-type="sp"></span></td></tr>
+        <tr><td>레드와인 (할랄 인증)</td><td>150 <span class="unit">ml</span></td><td class="scaled"><span data-tab="h" data-base="150" data-unit="ml" data-type="ml"></span></td></tr>
+        <tr><td>브라운스톡</td><td>300 <span class="unit">ml</span></td><td class="scaled"><span data-tab="h" data-base="300" data-unit="ml" data-type="ml"></span></td></tr>
+        <tr class="group-header"><td colspan="3">향신채</td></tr>
+        <tr><td>양파</td><td>1 <span class="unit">개</span></td><td class="scaled"><span data-tab="h" data-base="1" data-unit="개" data-type="whole"></span></td></tr>
+        <tr><td>당근</td><td>1 <span class="unit">개</span></td><td class="scaled"><span data-tab="h" data-base="1" data-unit="개" data-type="whole"></span></td></tr>
+        <tr><td>셀러리</td><td>2 <span class="unit">대</span></td><td class="scaled"><span data-tab="h" data-base="2" data-unit="대" data-type="whole"></span></td></tr>
+        <tr><td>대파</td><td>1 <span class="unit">대</span></td><td class="scaled"><span data-tab="h" data-base="1" data-unit="대" data-type="whole"></span></td></tr>
+        <tr class="group-header"><td colspan="3">마무리 · 기타</td></tr>
+        <tr><td>버터</td><td>3 <span class="unit">큰술 (많이)</span></td><td class="scaled"><span data-tab="h" data-base="3" data-unit="큰술" data-type="sp"></span></td></tr>
+        <tr><td>올리브유</td><td>2 <span class="unit">큰술</span></td><td class="scaled"><span data-tab="h" data-base="2" data-unit="큰술" data-type="sp"></span></td></tr>
+        <tr><td>파마산치즈</td><td colspan="2" style="text-align:center;color:#888;">취향껏 — 아낌없이</td></tr>
+        <tr><td>부케가르니</td><td colspan="2" style="text-align:center;color:#888;">1묶음 (월계수잎·타임·파슬리대)</td></tr>
+        <tr><td>타임잎</td><td colspan="2" style="text-align:center;color:#888;">마무리용 적당량</td></tr>
+        <tr><td>소금·후추</td><td colspan="2" style="text-align:center;color:#888;">간 맞추기용</td></tr>
+        <tr class="group-header"><td colspan="3">파스타면</td></tr>
+        <tr><td>스파게티 / 탈리아텔레</td><td>320 <span class="unit">g</span></td><td class="scaled"><span data-tab="h" data-base="320" data-unit="g" data-type="g"></span></td></tr>
+      </tbody>
+    </table>
+    <div class="note-card" style="margin-top:12px;">
+      ✓ <strong>할랄 체크</strong> — 레드와인 대신 할랄 인증 포도주스 + 레드와인 식초 조합으로 대체 가능해요. 버터도 할랄 인증 제품 사용 권장.
+    </div>
+  </section>
+
+  <section>
+    <h2>👩‍🍳 조리 순서</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-text">
+          올리브유 <span class="amt" data-tab="hs" data-step="2" data-stepunit="큰술" data-steptype="sp"></span>를 두르고 갈은 소고기를 넣어 <em>소금·후추</em>로 밑간하며 강불에 볶는다.
+          <div class="tip">⚠️ <strong>물이 생기지 않게 하는 게 핵심.</strong> 수분이 나오면 증발시켜가며 고기를 완전히 지져야 소스가 진해져요. 절대 뚜껑 닫지 말 것.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-text">
+          고기에서 나온 <em>기름을 걷어낸다</em>. (체나 숟가락으로 기름층만 제거)
+          <div class="tip">기름을 걷어야 소스가 텁텁하지 않고 깔끔해져요. 약간은 남겨도 됩니다.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-text">
+          걷어낸 고기기름(+ 올리브유 조금)에 <em>양파·당근·셀러리·대파를 잘게 다져</em> 넣고 중불로 충분히 볶는다.
+          <div class="tip">채소가 갈색빛이 날 때까지 충분히 볶을수록 단맛과 깊이가 생겨요. 10분 이상.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">4</div>
+        <div class="step-text">채소가 충분히 볶아지면 <em>고기를 다시 넣어</em> 합친다.</div>
+      </li>
+      <li>
+        <div class="step-num">5</div>
+        <div class="step-text">
+          토마토페이스트 <span class="amt" data-tab="hs" data-step="2" data-stepunit="큰술" data-steptype="sp"></span>를 <em>소량</em> 넣고 1~2분 볶아 신맛을 날린다.
+          <div class="tip">페이스트를 직접 볶으면 감칠맛이 훨씬 깊어져요.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">6</div>
+        <div class="step-text">레드와인 <span class="amt" data-tab="hs" data-step="150" data-stepunit="ml" data-steptype="ml"></span>을 붓고 <em>알코올이 날아갈 때까지</em> 강불로 졸인다.</div>
+      </li>
+      <li>
+        <div class="step-num">7</div>
+        <div class="step-text">토마토 캔을 넣고 으깨가며 섞는다.</div>
+      </li>
+      <li>
+        <div class="step-num">8</div>
+        <div class="step-text">브라운스톡 <span class="amt" data-tab="hs" data-step="300" data-stepunit="ml" data-steptype="ml"></span>을 붓는다.</div>
+      </li>
+      <li>
+        <div class="step-num">9</div>
+        <div class="step-text">
+          부케가르니를 넣고 <em>뚜껑 열고 약불~중불로 한참 끓인다</em>. (최소 45분, 1시간 이상 권장)
+          <div class="tip">냄비에 눌어붙지 않게 가끔 저어주세요. 너무 뻑뻑하면 스톡 조금 추가.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">10</div>
+        <div class="step-text">
+          부케가르니를 건져내고 <em>버터를 아낌없이</em> 넣어 녹인다.
+          <div class="tip">버터가 소스를 부드럽고 윤기있게 만들어요.</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">11</div>
+        <div class="step-text">
+          삶은 파스타면을 소스에 넣고 면수 조금과 함께 버무린다. <em>타임잎</em>을 올리고 파마산치즈를 갈아 마무리.
+          <div class="tip">면을 1분 덜 삶고 소스와 버무리면 면에 소스가 잘 배어요.</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+</div>
+
+<div style="margin-top:20px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<footer>Heewon @ Bekind Labs · 합숙 2026-04-20~04-26</footer>
+
+<script>
+  const cBase = 4, hBase = 4;
+  let cN = 4, hN = 4;
+
+  function scale(v, N, BASE) { return v * (N / BASE); }
+
+  function fmt(v, unit, type) {
+    if (type === 'g')     return (Math.round(v / 10) * 10) + ' ' + unit;
+    if (type === 'ml')    return (Math.round(v / 10) * 10) + ' ' + unit;
+    if (type === 'sp')    return (Math.round(v * 2) / 2) + ' ' + unit;
+    if (type === 'whole') return Math.ceil(v) + ' ' + unit;
+    return v + ' ' + unit;
+  }
+
+  function update(tab) {
+    const N = tab === 'c' ? cN : hN;
+    const BASE = tab === 'c' ? cBase : hBase;
+
+    if (tab === 'c') {
+      document.getElementById('cCount').textContent = N + '명';
+      document.getElementById('cN').textContent = N;
+    } else {
+      document.getElementById('hCount').textContent = N + '명';
+      document.getElementById('hN').textContent = N;
+    }
+
+    // 재료 셀
+    document.querySelectorAll('[data-tab="' + tab + '"]').forEach(el => {
+      const v = scale(parseFloat(el.dataset.base), N, BASE);
+      el.textContent = fmt(v, el.dataset.unit, el.dataset.type);
+    });
+
+    // 조리 단계 수량 (cs = classic step, hs = halal step)
+    const stepTab = tab === 'c' ? 'cs' : 'hs';
+    document.querySelectorAll('[data-tab="' + stepTab + '"]').forEach(el => {
+      const v = scale(parseFloat(el.dataset.step), N, BASE);
+      el.textContent = fmt(v, el.dataset.stepunit, el.dataset.steptype);
+    });
+  }
+
+  function changeServing(tab, d) {
+    if (tab === 'classic') { cN = Math.max(1, cN + d); update('c'); }
+    else                   { hN = Math.max(1, hN + d); update('h'); }
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelector('.tab-btn.' + tab).classList.add('active');
+  }
+
+  update('c');
+  update('h');
+</script>
+</body>
+</html>
