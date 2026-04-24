@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>소불고기 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; padding: 20px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 2em; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.9em; }
+  .tags { margin: 10px 0 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tag { background: #E8EDF1; color: #4A6280; border-radius: 20px; padding: 4px 12px; font-size: 0.82em; font-weight: 600; }
+  .tag.halal { background: #D4F1DE; color: #22633B; }
+
+  .serving-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #8B2500; color: white;
+    padding: 12px 20px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin: 20px 0;
+    box-shadow: 0 3px 12px rgba(139,37,0,0.3);
+  }
+  .serving-bar label { font-size: 0.95em; font-weight: 600; white-space: nowrap; }
+  .serving-controls { display: flex; align-items: center; gap: 10px; }
+  .btn-round {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-size: 1.2em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-round:hover { background: rgba(255,255,255,0.3); }
+  #meatDisplay { font-size: 1.4em; font-weight: bold; min-width: 80px; text-align: center; }
+
+  section { background: white; border-radius: 14px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(46,64,87,0.07); }
+  section h2 { margin: 0 0 14px; font-size: 1.05em; color: #2E4057; border-bottom: 2px solid #E8EDF1; padding-bottom: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; }
+  thead th { background: #E8EDF1; padding: 8px 10px; text-align: left; font-weight: 600; color: #4A6280; }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+  td:not(:first-child) { text-align: center; }
+  td.scaled { font-weight: 700; color: #8B2500; }
+  .unit { font-size: 0.82em; color: #888; }
+  tr.group-header td { background: #FAE8E0; font-weight: bold; color: #8B2500; font-size: 0.85em; padding: 6px 10px; border-bottom: none; }
+
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; align-items: start; }
+  .steps li:last-child { border-bottom: 0; }
+  .step-num { width: 28px; height: 28px; background: #8B2500; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: bold; flex-shrink: 0; }
+  .step-text { font-size: 0.93em; padding-top: 3px; }
+  .step-text .amt { background: #FAE8E0; color: #8B2500; font-weight: 700; border-radius: 4px; padding: 1px 6px; font-size: 0.92em; }
+  .step-text em { color: #C95D28; font-style: normal; font-weight: 600; }
+  .tip { background: #FFF8F0; border-left: 3px solid #F6AD55; border-radius: 0 8px 8px 0; padding: 8px 12px; margin-top: 8px; font-size: 0.87em; color: #7B5A2B; }
+  .note-card { background: #FAE8E0; border-radius: 10px; padding: 12px 16px; font-size: 0.88em; color: #5A1A00; margin-top: 10px; }
+  .note-card strong { color: #8B2500; }
+
+  footer { text-align: center; color: #aaa; font-size: 0.78em; margin-top: 30px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<header>
+  <h1>🥩 소불고기</h1>
+  <div class="subtitle">달콤 짭조름한 배즙 양념 · 불낙전골 베이스</div>
+  <div class="tags">
+    <span class="tag halal">✓ 할랄</span>
+    <span class="tag">한식</span>
+    <span class="tag">소고기</span>
+    <span class="tag">⏱ 재움 1시간+</span>
+  </div>
+</header>
+
+<div class="serving-bar">
+  <label>고기량</label>
+  <div class="serving-controls">
+    <button class="btn-round" onclick="changeMeat(-1)">−</button>
+    <span id="meatDisplay">600g</span>
+    <button class="btn-round" onclick="changeMeat(1)">+</button>
+  </div>
+</div>
+
+<!-- 재료 -->
+<section>
+  <h2>🛒 양념 재료</h2>
+  <table>
+    <thead>
+      <tr><th>재료</th><th>200g 기준</th><th>현재 (<span id="hN">600</span>g)</th></tr>
+    </thead>
+    <tbody>
+      <tr class="group-header"><td colspan="3">양념장</td></tr>
+      <tr>
+        <td>간장</td>
+        <td>4.5 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="4.5" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>설탕</td>
+        <td>2 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="2" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>올리고당</td>
+        <td>2 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="2" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>마늘 (다진)</td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>소주</td>
+        <td>2 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="2" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>배즙</td>
+        <td>1 <span class="unit">캔</span></td>
+        <td class="scaled"><span data-base="1" data-unit="캔" data-type="whole"></span></td>
+      </tr>
+      <tr>
+        <td>참기름</td>
+        <td>1 <span class="unit">작은술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="작은술" data-type="tsp"></span></td>
+      </tr>
+      <tr>
+        <td>후추가루</td>
+        <td colspan="2" style="text-align:center; color:#888;">약간</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note-card" style="margin-top:12px;">
+    💡 <strong>배즙이 포인트</strong> — 천연 효소가 고기를 부드럽게 해줘요. 없으면 아래 대체재료 참고.
+  </div>
+</section>
+
+<!-- 조리 순서 -->
+<section>
+  <h2>👩‍🍳 조리 순서</h2>
+  <ol class="steps">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-text">
+        양념 재료를 모두 섞어 양념장을 만든다.
+        <div class="tip">참기름은 재울 때 넣으면 향이 날아가요. 굽기 직전에 넣거나 완성 후 마무리로 뿌려도 좋아요.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-text">
+        얇게 썬 소고기에 양념장을 넣고 <em>골고루 버무려 최소 1시간 냉장 숙성</em>한다.
+        <div class="tip">배즙 효소가 활성화되려면 시간이 필요해요. 전날 밤 재워두면 더욱 부드러워져요.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-text">
+        달군 팬에 <em>센불로 빠르게 굽는다</em>. 한 번에 너무 많이 넣지 않기.
+        <div class="tip">고기를 한꺼번에 많이 넣으면 온도가 떨어져 물이 나와요. 조금씩 나눠 굽는 게 핵심.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-text">
+        고기가 거의 익으면 <em>참기름을 한 번 더 둘러</em> 향을 살린다.
+      </div>
+    </li>
+  </ol>
+</section>
+
+<section>
+  <h2>🔄 대체 재료</h2>
+  <table>
+    <thead>
+      <tr><th>원재료</th><th>대체재료</th><th>비율 / 메모</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>배즙 1캔</td>
+        <td>매실청</td>
+        <td style="text-align:left; font-size:0.9em;">4큰술 — 유기산이 연육 효과, 잡내 제거까지</td>
+      </tr>
+      <tr>
+        <td>설탕 2큰술</td>
+        <td>벌꿀</td>
+        <td style="text-align:left; font-size:0.9em;">1.5큰술 — 꿀이 더 달아서 양 줄이기</td>
+      </tr>
+      <tr>
+        <td>설탕 2큰술</td>
+        <td>조청</td>
+        <td style="text-align:left; font-size:0.9em;">2큰술 — 단맛 비슷, 윤기 추가됨</td>
+      </tr>
+      <tr>
+        <td>올리고당 2큰술</td>
+        <td>조청</td>
+        <td style="text-align:left; font-size:0.9em;">2큰술 — 1:1 대체 가능</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="note-card" style="margin:14px 0;">
+  🍲 <strong>불낙전골로 활용할 경우</strong> — 불고기 양념에 재운 고기를 전골 냄비 바닥에 깔고, 전골양념 국물을 부어 낙지·채소와 함께 끓이면 됩니다.
+</div>
+
+<div style="margin-top:20px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<footer>Heewon @ Bekind Labs · 합숙 2026-04-20~04-26</footer>
+
+<script>
+  const BASE_MEAT = 200;
+  let meatG = 600; // 기본 600g (레시피 x3)
+
+  function scale(v) { return v * (meatG / BASE_MEAT); }
+
+  function fmt(v, unit, type) {
+    if (type === 'sp')    return (Math.round(v * 2) / 2) + ' ' + unit;
+    if (type === 'tsp')   return (Math.round(v * 4) / 4) + ' ' + unit;
+    if (type === 'whole') return (Math.round(v * 2) / 2) + ' ' + unit;
+    return v + ' ' + unit;
+  }
+
+  function update() {
+    document.getElementById('meatDisplay').textContent = meatG + 'g';
+    document.getElementById('hN').textContent = meatG;
+    document.querySelectorAll('[data-base]').forEach(el => {
+      const v = scale(parseFloat(el.dataset.base));
+      el.textContent = fmt(v, el.dataset.unit, el.dataset.type);
+    });
+  }
+
+  function changeMeat(d) {
+    meatG = Math.max(200, meatG + d * 200);
+    update();
+  }
+
+  update();
+</script>
+</body>
+</html>
