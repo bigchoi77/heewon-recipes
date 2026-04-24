@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>비빔밥 양념장 · 레시피북</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+    color: #2E4057;
+    line-height: 1.6;
+    background: #fafafa;
+    -webkit-text-size-adjust: 100%;
+  }
+  header { text-align: center; padding: 20px 0 8px; }
+  h1 { margin: 0 0 4px; font-size: 2em; letter-spacing: -0.5px; }
+  .subtitle { color: #888; font-size: 0.9em; }
+  .tags { margin: 10px 0 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tag { background: #E8EDF1; color: #4A6280; border-radius: 20px; padding: 4px 12px; font-size: 0.82em; font-weight: 600; }
+  .tag.halal { background: #D4F1DE; color: #22633B; }
+
+  .serving-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #A93226; color: white;
+    padding: 12px 20px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin: 20px 0;
+    box-shadow: 0 3px 12px rgba(169,50,38,0.3);
+  }
+  .serving-bar label { font-size: 0.95em; font-weight: 600; white-space: nowrap; }
+  .serving-controls { display: flex; align-items: center; gap: 10px; }
+  .btn-round {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.15);
+    color: white; font-size: 1.2em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-round:hover { background: rgba(255,255,255,0.3); }
+  #servingCount { font-size: 1.5em; font-weight: bold; min-width: 50px; text-align: center; }
+
+  section { background: white; border-radius: 14px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(46,64,87,0.07); }
+  section h2 { margin: 0 0 14px; font-size: 1.05em; color: #2E4057; border-bottom: 2px solid #E8EDF1; padding-bottom: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; }
+  thead th { background: #E8EDF1; padding: 8px 10px; text-align: left; font-weight: 600; color: #4A6280; }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+  td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+  td:not(:first-child) { text-align: center; }
+  td.scaled { font-weight: 700; color: #A93226; }
+  .unit { font-size: 0.82em; color: #888; }
+
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; align-items: start; }
+  .steps li:last-child { border-bottom: 0; }
+  .step-num { width: 28px; height: 28px; background: #A93226; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: bold; flex-shrink: 0; }
+  .step-text { font-size: 0.93em; padding-top: 3px; }
+  .step-text em { color: #C95D28; font-style: normal; font-weight: 600; }
+  .tip { background: #FFF8F0; border-left: 3px solid #F6AD55; border-radius: 0 8px 8px 0; padding: 8px 12px; margin-top: 8px; font-size: 0.87em; color: #7B5A2B; }
+  .note-card { background: #FBEAE7; border-radius: 10px; padding: 12px 16px; font-size: 0.88em; color: #6B1A0A; margin-top: 10px; }
+  .note-card strong { color: #A93226; }
+
+  footer { text-align: center; color: #aaa; font-size: 0.78em; margin-top: 30px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:8px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<header>
+  <h1>🍚 비빔밥</h1>
+  <div class="subtitle">버터 베이스 양념장 · 남은 나물 활용</div>
+  <div class="tags">
+    <span class="tag halal">✓ 할랄</span>
+    <span class="tag">한식</span>
+    <span class="tag">밥</span>
+    <span class="tag">⏱ 5분</span>
+  </div>
+</header>
+
+<div class="serving-bar">
+  <label>인원</label>
+  <div class="serving-controls">
+    <button class="btn-round" onclick="changeServing(-1)">−</button>
+    <span id="servingCount">2명</span>
+    <button class="btn-round" onclick="changeServing(1)">+</button>
+  </div>
+</div>
+
+<!-- 재료 -->
+<section>
+  <h2>🛒 양념장 재료</h2>
+  <table>
+    <thead>
+      <tr><th>재료</th><th>2인 기준</th><th>현재 (<span id="hN">2</span>인)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>고추장</td>
+        <td>3 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="3" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>버터 <span class="unit">(완전 녹여서)</span></td>
+        <td>10 <span class="unit">g</span></td>
+        <td class="scaled"><span data-base="10" data-unit="g" data-type="g"></span></td>
+      </tr>
+      <tr>
+        <td>소주</td>
+        <td>2 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="2" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>식초</td>
+        <td>2 <span class="unit">방울</span></td>
+        <td colspan="1" class="scaled" style="color:#888; font-weight:400; font-size:0.88em;"><span id="vinegarText">2방울</span></td>
+      </tr>
+      <tr>
+        <td>다진마늘</td>
+        <td>½ <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="0.5" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>설탕</td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>참기름</td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+      <tr>
+        <td>통깨</td>
+        <td>1 <span class="unit">큰술</span></td>
+        <td class="scaled"><span data-base="1" data-unit="큰술" data-type="sp"></span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note-card" style="margin-top:12px;">
+    💡 <strong>버터가 포인트</strong> — 완전히 녹인 버터를 넣으면 양념장이 부드럽고 고소해져요. 뜨거울 때 섞어야 잘 어우러집니다.
+  </div>
+</section>
+
+<!-- 조리 순서 -->
+<section>
+  <h2>👩‍🍳 만드는 법</h2>
+  <ol class="steps">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-text">
+        버터를 전자레인지나 작은 냄비에서 <em>완전히 녹인다</em>.
+        <div class="tip">버터가 완전히 녹아야 다른 재료와 잘 섞여요. 반쯤 굳어 있으면 양념이 뭉쳐요.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-text">
+        녹인 버터에 고추장, 소주, 다진마늘, 설탕을 넣고 <em>골고루 섞는다</em>.
+      </div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-text">
+        식초 <em>2방울</em>을 넣고 섞은 뒤, 참기름과 통깨를 마지막에 넣어 마무리.
+        <div class="tip">식초는 신맛이 강하니 정말 2방울만. 양념에 생기와 밸런스를 주는 역할이에요.</div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-text">
+        밥 위에 남은 나물·달걀 등 올리고, 양념장을 곁들여 <em>쓱쓱 비벼</em> 먹는다.
+      </div>
+    </li>
+  </ol>
+</section>
+
+<div style="margin-top:20px;">
+  <a href="./index.html" style="color:#2E4057; text-decoration:none; font-size:0.9em;">← 식단표</a>
+</div>
+
+<footer>Heewon @ Bekind Labs · 합숙 2026-04-20~04-26</footer>
+
+<script>
+  let N = 2;
+  const BASE = 2;
+
+  function scale(v) { return v * (N / BASE); }
+
+  function fmt(v, unit, type) {
+    if (type === 'sp') return (Math.round(v * 4) / 4) + ' ' + unit;
+    if (type === 'g')  return Math.round(v) + ' ' + unit;
+    return v + ' ' + unit;
+  }
+
+  function update() {
+    document.getElementById('servingCount').textContent = N + '명';
+    document.getElementById('hN').textContent = N;
+    // 식초는 항상 2방울 (고정)
+    document.getElementById('vinegarText').textContent = '2방울';
+    document.querySelectorAll('[data-base]').forEach(el => {
+      const v = scale(parseFloat(el.dataset.base));
+      el.textContent = fmt(v, el.dataset.unit, el.dataset.type);
+    });
+  }
+
+  function changeServing(d) {
+    N = Math.max(1, N + d);
+    update();
+  }
+
+  update();
+</script>
+</body>
+</html>
